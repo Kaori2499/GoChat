@@ -32,6 +32,14 @@
     "label": "预设",
     "add": "添加空预设"
   },
+  "roadmap": {
+    "label": "路线图",
+    "empty": "暂无路线图项",
+    "status": {
+      "pending": "未完成",
+      "completed": "已完成"
+    }
+  },
   "notif": {
     "noPresets": "未找到通知预设。",
     "centerTitle": "通知中心",

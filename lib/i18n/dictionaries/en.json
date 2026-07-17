@@ -32,6 +32,14 @@
     "label": "Presets",
     "add": "Add empty preset"
   },
+  "roadmap": {
+    "label": "Roadmap",
+    "empty": "No roadmap items",
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed"
+    }
+  },
   "notif": {
     "noPresets": "No notification presets found.",
     "centerTitle": "Notification Center",

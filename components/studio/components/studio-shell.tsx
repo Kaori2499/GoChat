@@ -3,6 +3,7 @@
 import type { ReactNode } from "react"
 
 import { LocaleSelect } from "@/components/i18n/locale-select"
+import { RoadmapButton } from "@/components/roadmap-button"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 export const StudioShell = ({ children }: { children: ReactNode }) => (
@@ -11,6 +12,9 @@ export const StudioShell = ({ children }: { children: ReactNode }) => (
       <ThemeToggle className="pointer-events-auto" />
       <LocaleSelect className="pointer-events-auto" />
     </header>
+    <div className="pointer-events-none absolute bottom-0 left-0 z-20 p-6">
+      <RoadmapButton className="pointer-events-auto" />
+    </div>
     {children}
   </div>
 )

@@ -32,6 +32,14 @@
     "label": "プリセット",
     "add": "空のプリセットを追加"
   },
+  "roadmap": {
+    "label": "ロードマップ",
+    "empty": "ロードマップ項目がありません",
+    "status": {
+      "pending": "未完了",
+      "completed": "完了"
+    }
+  },
   "notif": {
     "noPresets": "通知プリセットが見つかりません。",
     "centerTitle": "通知センター",
