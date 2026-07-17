@@ -1,0 +1,64 @@
+{
+  "locale": {
+    "label": "Language",
+    "zh": "中文",
+    "en": "English",
+    "ja": "日本語"
+  },
+  "theme": {
+    "toLight": "Switch to light mode",
+    "toDark": "Switch to dark mode"
+  },
+  "mode": {
+    "notif": "Notif",
+    "chat": "Chat"
+  },
+  "activeUser": {
+    "label": "Active user",
+    "none": "None"
+  },
+  "playback": {
+    "label": "Playback",
+    "play": "Play",
+    "stop": "Stop",
+    "timeGap": "Time gap"
+  },
+  "export": {
+    "label": "Export",
+    "button": "Export PNG",
+    "exporting": "Exporting…"
+  },
+  "presets": {
+    "label": "Presets",
+    "add": "Add empty preset"
+  },
+  "notif": {
+    "noPresets": "No notification presets found.",
+    "centerTitle": "Notification Center",
+    "noNotifications": "No notifications",
+    "addNotification": "Add notification",
+    "selectUser": "Select user",
+    "messagePlaceholder": "Message",
+    "newChat": "New chat",
+    "unknown": "Unknown",
+    "clearAll": "Clear all notifications",
+    "changeSender": "Change sender",
+    "editTime": "Edit time",
+    "editNotification": "Edit notification",
+    "insertAbove": "Insert above",
+    "insertBelow": "Insert below",
+    "delete": "Delete"
+  },
+  "chat": {
+    "addMessage": "Add message",
+    "selectUser": "Select user",
+    "messagePlaceholder": "Message",
+    "newChat": "New chat",
+    "editChatName": "Edit chat name",
+    "changeUser": "Change user",
+    "editMessage": "Edit message",
+    "insertAbove": "Insert message above",
+    "insertBelow": "Insert message below",
+    "delete": "Delete message"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "chat-sakiko",
+  "title": "祥子",
+  "messages": [
+    {
+      "id": "dm1",
+      "userId": "sakiko",
+      "content": "今日のライブ、来られる？"
+    },
+    {
+      "id": "dm2",
+      "userId": "sakiko",
+      "content": "チケット、取っておいたわ。"
+    }
+  ]
+}

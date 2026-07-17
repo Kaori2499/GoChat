@@ -1,0 +1,64 @@
+{
+  "locale": {
+    "label": "言語",
+    "zh": "中文",
+    "en": "English",
+    "ja": "日本語"
+  },
+  "theme": {
+    "toLight": "ライトモードに切り替え",
+    "toDark": "ダークモードに切り替え"
+  },
+  "mode": {
+    "notif": "通知",
+    "chat": "チャット"
+  },
+  "activeUser": {
+    "label": "アクティブユーザー",
+    "none": "なし"
+  },
+  "playback": {
+    "label": "再生",
+    "play": "再生",
+    "stop": "停止",
+    "timeGap": "間隔"
+  },
+  "export": {
+    "label": "書き出し",
+    "button": "PNG を書き出し",
+    "exporting": "書き出し中…"
+  },
+  "presets": {
+    "label": "プリセット",
+    "add": "空のプリセットを追加"
+  },
+  "notif": {
+    "noPresets": "通知プリセットが見つかりません。",
+    "centerTitle": "通知センター",
+    "noNotifications": "通知なし",
+    "addNotification": "通知を追加",
+    "selectUser": "ユーザーを選択",
+    "messagePlaceholder": "メッセージ",
+    "newChat": "新しいチャット",
+    "unknown": "不明",
+    "clearAll": "すべての通知を削除",
+    "changeSender": "送信者を変更",
+    "editTime": "時刻を編集",
+    "editNotification": "通知を編集",
+    "insertAbove": "上に挿入",
+    "insertBelow": "下に挿入",
+    "delete": "削除"
+  },
+  "chat": {
+    "addMessage": "メッセージを追加",
+    "selectUser": "ユーザーを選択",
+    "messagePlaceholder": "メッセージ",
+    "newChat": "新しいチャット",
+    "editChatName": "チャット名を編集",
+    "changeUser": "ユーザーを変更",
+    "editMessage": "メッセージを編集",
+    "insertAbove": "上にメッセージを挿入",
+    "insertBelow": "下にメッセージを挿入",
+    "delete": "メッセージを削除"
+  }
+}

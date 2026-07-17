@@ -1,0 +1,35 @@
+{
+  "id": "notifications-lock-screen",
+  "notifications": [
+    {
+      "id": "notif-1",
+      "chatId": "chat-mygo",
+      "chatTitle": "MyGO!!!!!",
+      "message": {
+        "id": "m6",
+        "userId": "anon",
+        "content": "やった！燈ちゃんの新曲、楽しみ！"
+      }
+    },
+    {
+      "id": "notif-2",
+      "chatId": "chat-sakiko",
+      "chatTitle": "祥子",
+      "message": {
+        "id": "dm2",
+        "userId": "sakiko",
+        "content": "チケット、取っておいたわ。"
+      }
+    },
+    {
+      "id": "notif-3",
+      "chatId": "chat-mygo",
+      "chatTitle": "MyGO!!!!!",
+      "message": {
+        "id": "m4",
+        "userId": "tomori",
+        "content": "……うん。少し、書いてみた。"
+      }
+    }
+  ]
+}

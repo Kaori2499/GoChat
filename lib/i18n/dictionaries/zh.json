@@ -1,0 +1,64 @@
+{
+  "locale": {
+    "label": "语言",
+    "zh": "中文",
+    "en": "English",
+    "ja": "日本語"
+  },
+  "theme": {
+    "toLight": "切换到浅色模式",
+    "toDark": "切换到深色模式"
+  },
+  "mode": {
+    "notif": "通知",
+    "chat": "聊天"
+  },
+  "activeUser": {
+    "label": "当前用户",
+    "none": "无"
+  },
+  "playback": {
+    "label": "播放",
+    "play": "播放",
+    "stop": "停止",
+    "timeGap": "间隔"
+  },
+  "export": {
+    "label": "导出",
+    "button": "导出 PNG",
+    "exporting": "导出中…"
+  },
+  "presets": {
+    "label": "预设",
+    "add": "添加空预设"
+  },
+  "notif": {
+    "noPresets": "未找到通知预设。",
+    "centerTitle": "通知中心",
+    "noNotifications": "暂无通知",
+    "addNotification": "添加通知",
+    "selectUser": "选择用户",
+    "messagePlaceholder": "消息",
+    "newChat": "新对话",
+    "unknown": "未知",
+    "clearAll": "清除全部通知",
+    "changeSender": "更换发送者",
+    "editTime": "编辑时间",
+    "editNotification": "编辑通知",
+    "insertAbove": "在上方插入",
+    "insertBelow": "在下方插入",
+    "delete": "删除"
+  },
+  "chat": {
+    "addMessage": "添加消息",
+    "selectUser": "选择用户",
+    "messagePlaceholder": "消息",
+    "newChat": "新对话",
+    "editChatName": "编辑聊天名称",
+    "changeUser": "更换用户",
+    "editMessage": "编辑消息",
+    "insertAbove": "在上方插入消息",
+    "insertBelow": "在下方插入消息",
+    "delete": "删除消息"
+  }
+}

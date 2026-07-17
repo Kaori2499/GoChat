@@ -1,0 +1,36 @@
+{
+  "id": "chat-mygo",
+  "title": "MyGO!!!!!",
+  "messages": [
+    {
+      "id": "m1",
+      "userId": "anon",
+      "content": "みんな、今日の練習どうする？"
+    },
+    {
+      "id": "m2",
+      "userId": "taki",
+      "content": "まず曲決めないと。"
+    },
+    {
+      "id": "m3",
+      "userId": "soyo",
+      "content": "そうね。燈ちゃん、何かある？"
+    },
+    {
+      "id": "m4",
+      "userId": "tomori",
+      "content": "……うん。少し、書いてみた。"
+    },
+    {
+      "id": "m5",
+      "userId": "rana",
+      "content": "おもしろそう。聴きたいな。"
+    },
+    {
+      "id": "m6",
+      "userId": "anon",
+      "content": "やった！燈ちゃんの新曲、楽しみ！"
+    }
+  ]
+}
