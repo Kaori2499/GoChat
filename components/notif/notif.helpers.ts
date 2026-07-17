@@ -1,5 +1,6 @@
 import { resolveWallpaperUrl } from "@/components/chat/chat.helpers";
 import type { ChatUser } from "@/components/chat/chat.types";
+import { createId } from "@/lib/create-id";
 
 import type { NotifClockState, NotifItemData } from "./notif.types";
 
@@ -44,10 +45,10 @@ export const resolveNotifTimeLabel = (item: NotifItemData): string =>
 export const createEmptyNotification = (): NotifItemData => ({
   chatId: "",
   chatTitle: "New chat",
-  id: `notif-${crypto.randomUUID()}`,
+  id: `notif-${createId()}`,
   message: {
     content: "",
-    id: `msg-${crypto.randomUUID()}`,
+    id: `msg-${createId()}`,
     userId: "",
   },
   timeLabel: DEFAULT_NOTIF_TIME_LABEL,

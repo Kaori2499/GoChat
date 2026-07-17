@@ -1,4 +1,5 @@
 import type { ChatMessage, ChatPreset } from "@/components/chat/chat.types";
+import { createId } from "@/lib/create-id";
 
 export const NONE_USER = "none";
 
@@ -17,12 +18,12 @@ export interface ChatDraft {
 
 export const createEmptyMessage = (): ChatMessage => ({
   content: "",
-  id: `msg-${crypto.randomUUID()}`,
+  id: `msg-${createId()}`,
   userId: "",
 });
 
 export const createEmptyPreset = (): ChatPreset => {
-  const id = `chat-${crypto.randomUUID()}`;
+  const id = `chat-${createId()}`;
   return {
     fileName: "",
     id,
