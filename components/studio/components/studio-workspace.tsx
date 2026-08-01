@@ -7,6 +7,7 @@ import type { NotifPreset } from "@/components/notif/notif.types";
 import { useSessionStore } from "../hooks/use-session-store";
 import { StudioActiveUser } from "./active-user";
 import { StudioChatCanvas } from "./chat-canvas";
+import { StudioChatExport } from "./chat-export";
 import { StudioNotifCanvas } from "./notif-canvas";
 import { StudioNotifExport } from "./notif-export";
 import { StudioPlayback } from "./playback-controls";
@@ -19,6 +20,7 @@ export const StudioWorkspace = ({
 }) => {
   const mode = useSessionStore((state) => state.mode);
   const notifExportRef = useRef<HTMLDivElement>(null);
+  const chatExportRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
@@ -31,8 +33,9 @@ export const StudioWorkspace = ({
           <aside className="absolute top-0 left-full ml-16 flex w-56 flex-col gap-6">
             <StudioActiveUser />
             <StudioPlayback />
+            <StudioChatExport targetRef={chatExportRef} />
           </aside>
-          <StudioChatCanvas />
+          <StudioChatCanvas exportRootRef={chatExportRef} />
         </div>
       ) : (
         <div className="relative">

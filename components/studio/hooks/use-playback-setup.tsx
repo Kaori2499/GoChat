@@ -8,6 +8,7 @@ import { PLAYBACK_COMPLETE_DELAY_MS } from "../lib/studio.lib";
 /** Drives reveal ticks + auto-complete. Mounted under Studio.Provider. */
 export const PlaybackSetup = () => {
   const gapMs = useStudioStore((state) => state.playback.gapMs);
+  const timeScale = useStudioStore((state) => state.playback.timeScale);
   const isPlaying = useStudioStore((state) => state.playback.isPlaying);
   const visibleCount = useStudioStore((state) => state.playback.visibleCount);
   const selectedId = useStudioStore((state) => state.catalog.selectedId);
@@ -26,15 +27,18 @@ export const PlaybackSetup = () => {
   const messageCount = draft?.messages.length ?? 0;
   const isComplete = isPlaying && visibleCount >= messageCount;
 
+  const scaledGapMs = gapMs / timeScale;
+  const scaledCompleteDelayMs = PLAYBACK_COMPLETE_DELAY_MS / timeScale;
+
   useEffect(() => {
     if (!isPlaying || visibleCount >= messageCount) {
       return;
     }
     const timer = window.setTimeout(() => {
       revealNext();
-    }, gapMs);
+    }, scaledGapMs);
     return () => window.clearTimeout(timer);
-  }, [gapMs, isPlaying, messageCount, revealNext, visibleCount]);
+  }, [isPlaying, messageCount, revealNext, scaledGapMs, visibleCount]);
 
   useEffect(() => {
     if (!isComplete) {
@@ -42,9 +46,9 @@ export const PlaybackSetup = () => {
     }
     const timer = window.setTimeout(() => {
       completePlayback();
-    }, PLAYBACK_COMPLETE_DELAY_MS);
+    }, scaledCompleteDelayMs);
     return () => window.clearTimeout(timer);
-  }, [completePlayback, isComplete]);
+  }, [completePlayback, isComplete, scaledCompleteDelayMs]);
 
   return null;
 };

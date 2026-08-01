@@ -40,10 +40,16 @@ export interface DraftsStore {
 export interface PlaybackStore {
   gapMs: number;
   isPlaying: boolean;
+  /**
+   * Content speed multiplier. `1` = realtime; values below 1 slow
+   * reveals/animations so video export can capture more unique frames.
+   */
+  timeScale: number;
   visibleCount: number;
   completePlayback: () => void;
   revealNext: () => void;
   setGapMs: (gapMs: number) => void;
+  setTimeScale: (timeScale: number) => void;
   startPlayback: (messageCount: number) => void;
   stopPlayback: () => void;
 }

@@ -2,6 +2,7 @@
 
 import { StudioActiveUser } from "./components/active-user";
 import { StudioChatCanvas } from "./components/chat-canvas";
+import { StudioChatExport } from "./components/chat-export";
 import { StudioModeToggle } from "./components/mode-toggle";
 import { StudioNotifCanvas } from "./components/notif-canvas";
 import { StudioNotifExport } from "./components/notif-export";
@@ -34,6 +35,7 @@ StudioRoot.displayName = "Studio";
 export const Studio = Object.assign(StudioRoot, {
   ActiveUser: StudioActiveUser,
   ChatCanvas: StudioChatCanvas,
+  ChatExport: StudioChatExport,
   ModeToggle: StudioModeToggle,
   NotifCanvas: StudioNotifCanvas,
   NotifExport: StudioNotifExport,

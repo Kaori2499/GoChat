@@ -27,6 +27,7 @@ const ChatPreview = ({
   theme: themeProp,
   editable = true,
   entranceMessageId,
+  entranceDurationMs,
   onTitleChange,
   onMessageContentChange,
   onMessageUserChange,
@@ -34,6 +35,7 @@ const ChatPreview = ({
   onDeleteMessage,
   onReorderMessage,
   onAddMessage,
+  exportRootRef,
   className,
 }: ChatPreviewProps) => {
   const { resolvedTheme } = useTheme();
@@ -58,6 +60,7 @@ const ChatPreview = ({
         }}
       >
         <ChatShell
+          ref={exportRootRef}
           className="h-full w-full rounded-[47px] border border-black/10"
           theme={theme}
           wallpaperUrl={wallpaper}
@@ -76,6 +79,7 @@ const ChatPreview = ({
               selfUserId={selfUserId}
               editable={editable}
               entranceMessageId={entranceMessageId}
+              entranceDurationMs={entranceDurationMs}
               onMessageContentChange={onMessageContentChange}
               onMessageUserChange={onMessageUserChange}
               onInsertMessage={onInsertMessage}

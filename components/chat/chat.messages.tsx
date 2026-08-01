@@ -1,21 +1,29 @@
 "use client";
 
+/* oxlint-disable complexity -- message row drag/drop + entrance flags */
 import { Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import type { DragEvent, RefObject } from "react";
 
 import {
   useDictionary,
   useLocale,
 } from "@/components/i18n/dictionary-provider";
+import type { Locale } from "@/lib/i18n/config";
 import { resolveDisplayName } from "@/lib/user-names";
 import { cn } from "@/lib/utils";
 
 import { isGroupChat } from "./chat.helpers";
 import { ChatMessage } from "./chat.message";
-import type { ChatMessagesProps } from "./chat.types";
+import type {
+  ChatMessage as ChatMessageData,
+  ChatUser,
+  ChatMessagesProps,
+} from "./chat.types";
 
 const DATE_LABEL = "今日";
 const DRAG_TYPE = "application/x-gochat-message-index";
+const DEFAULT_ENTRANCE_MS = 300;
 
 const dateLabelClassName =
   "mx-auto w-fit rounded-full px-3 py-1 text-center text-xs font-semibold text-white shadow-[0_1px_4px_rgba(0,0,0,0.35)] backdrop-blur-md";
@@ -33,12 +41,233 @@ const resolveInsertAt = (
   bounds: DOMRect
 ): number => (clientY < bounds.top + bounds.height / 2 ? index : index + 1);
 
+const applyMessageReorderDrop = ({
+  event,
+  index,
+  messageCount,
+  onReorderMessage,
+  setDragIndex,
+  setInsertAt,
+}: {
+  event: DragEvent<HTMLDivElement>;
+  index: number;
+  messageCount: number;
+  onReorderMessage?: (fromIndex: number, toIndex: number) => void;
+  setDragIndex: (index: number | null) => void;
+  setInsertAt: (index: number | null) => void;
+}) => {
+  event.preventDefault();
+  const fromRaw = event.dataTransfer.getData(DRAG_TYPE);
+  const fromIndex = Number(fromRaw);
+  const bounds = event.currentTarget.getBoundingClientRect();
+  let toIndex = resolveInsertAt(index, event.clientY, bounds);
+  const isInvalid =
+    Number.isNaN(fromIndex) || fromIndex < 0 || fromIndex >= messageCount;
+  if (isInvalid) {
+    setDragIndex(null);
+    setInsertAt(null);
+    return;
+  }
+  if (fromIndex < toIndex) {
+    toIndex -= 1;
+  }
+  if (fromIndex !== toIndex) {
+    onReorderMessage?.(fromIndex, toIndex);
+  }
+  setDragIndex(null);
+  setInsertAt(null);
+};
+
+interface ChatMessageRowProps {
+  message: ChatMessageData;
+  index: number;
+  messageCount: number;
+  previousUserId?: string;
+  usersById: Record<string, ChatUser>;
+  users: ChatUser[];
+  viewer: ChatUser | undefined;
+  selfUserId?: string;
+  editable: boolean;
+  showNameSpacer: boolean;
+  entranceMessageId?: string;
+  entranceDurationMs: number;
+  entranceRef: RefObject<HTMLDivElement | null>;
+  dragIndex: number | null;
+  insertAt: number | null;
+  showInsertLine: boolean;
+  locale: Locale;
+  setDragIndex: (index: number | null) => void;
+  setInsertAt: (index: number | null) => void;
+  onMessageContentChange?: (messageId: string, content: string) => void;
+  onMessageUserChange?: (messageId: string, userId: string) => void;
+  onInsertMessage?: (anchorId: string, position: "above" | "below") => void;
+  onDeleteMessage?: (messageId: string) => void;
+  onReorderMessage?: (fromIndex: number, toIndex: number) => void;
+}
+
+const ChatMessageRow = ({
+  message,
+  index,
+  messageCount,
+  previousUserId,
+  usersById,
+  users,
+  viewer,
+  selfUserId,
+  editable,
+  showNameSpacer,
+  entranceMessageId,
+  entranceDurationMs,
+  entranceRef,
+  dragIndex,
+  insertAt,
+  showInsertLine,
+  locale,
+  setDragIndex,
+  setInsertAt,
+  onMessageContentChange,
+  onMessageUserChange,
+  onInsertMessage,
+  onDeleteMessage,
+  onReorderMessage,
+}: ChatMessageRowProps) => {
+  const isUnassigned = !message.userId;
+  const sender = usersById[message.userId];
+  const isOwn =
+    !isUnassigned && Boolean(selfUserId) && message.userId === selfUserId;
+  const isConsecutiveFromSender = previousUserId === message.userId;
+  const useCompactSpacing = isOwn && isConsecutiveFromSender;
+  const isEntrance = message.id === entranceMessageId;
+  const showLineHere =
+    showInsertLine &&
+    (insertAt === index ||
+      (insertAt === messageCount && index === messageCount - 1));
+  const lineAtBottom = showLineHere && insertAt === messageCount;
+
+  return (
+    <div
+      ref={isEntrance ? entranceRef : undefined}
+      className={cn(
+        "relative",
+        isEntrance && "animate-in fade-in slide-in-from-bottom-4 fill-mode-both"
+      )}
+      style={
+        isEntrance
+          ? { animationDuration: `${entranceDurationMs}ms` }
+          : undefined
+      }
+    >
+      {showLineHere && !lineAtBottom ? (
+        <div
+          className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-0.5 -translate-y-1/2 rounded-full bg-[var(--chat-accent)]"
+          aria-hidden
+        />
+      ) : null}
+      <div
+        draggable={editable}
+        className={cn(
+          "scroll-mb-4",
+          !useCompactSpacing && "space-y-3",
+          editable && "cursor-grab active:cursor-grabbing"
+        )}
+        onDragStart={(event) => {
+          if (!editable) {
+            return;
+          }
+          setDragIndex(index);
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData(DRAG_TYPE, String(index));
+        }}
+        onDragOver={(event) => {
+          if (!editable || dragIndex === null) {
+            return;
+          }
+          event.preventDefault();
+          event.dataTransfer.dropEffect = "move";
+          const bounds = event.currentTarget.getBoundingClientRect();
+          setInsertAt(resolveInsertAt(index, event.clientY, bounds));
+        }}
+        onDragLeave={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+            setInsertAt(null);
+          }
+        }}
+        onDrop={(event) => {
+          applyMessageReorderDrop({
+            event,
+            index,
+            messageCount,
+            onReorderMessage,
+            setDragIndex,
+            setInsertAt,
+          });
+        }}
+        onDragEnd={() => {
+          setDragIndex(null);
+          setInsertAt(null);
+        }}
+      >
+        <div className={cn(useCompactSpacing ? "" : "space-y-3")}>
+          {index === 0 ? (
+            <div className="flex justify-center">
+              <span className={dateLabelClassName} style={dateLabelStyle}>
+                {DATE_LABEL}
+              </span>
+            </div>
+          ) : null}
+          <ChatMessage
+            editable={editable}
+            users={users}
+            states={{
+              content: message.content,
+              hasPrecedingMessage: index > 0,
+              id: message.id,
+              isConsecutiveFromSender,
+              isGroup: showNameSpacer || isUnassigned || editable,
+              isOwn,
+              isUnassigned,
+              senderAvatarUrl: sender?.avatarUrl,
+              senderName: sender
+                ? resolveDisplayName(viewer, sender, locale)
+                : undefined,
+            }}
+            actions={{
+              onContentChange: (content) => {
+                onMessageContentChange?.(message.id, content);
+              },
+              onDelete: () => {
+                onDeleteMessage?.(message.id);
+              },
+              onInsertAbove: () => {
+                onInsertMessage?.(message.id, "above");
+              },
+              onInsertBelow: () => {
+                onInsertMessage?.(message.id, "below");
+              },
+              onUserChange: (userId) => {
+                onMessageUserChange?.(message.id, userId);
+              },
+            }}
+          />
+        </div>
+      </div>
+      {lineAtBottom ? (
+        <div
+          className="pointer-events-none absolute right-0 bottom-0 left-0 z-20 h-0.5 translate-y-1/2 rounded-full bg-[var(--chat-accent)]"
+          aria-hidden
+        />
+      ) : null}
+    </div>
+  );
+};
+
 const ChatMessages = ({
   messages,
   usersById,
   selfUserId,
   editable = false,
   entranceMessageId,
+  entranceDurationMs = DEFAULT_ENTRANCE_MS,
   onMessageContentChange,
   onMessageUserChange,
   onInsertMessage,
@@ -66,11 +295,12 @@ const ChatMessages = ({
     if (!entranceMessageId || !entranceRef.current) {
       return;
     }
+    // Instant scroll while export is slowed — smooth scrolling isn't time-scaled.
     entranceRef.current.scrollIntoView({
-      behavior: "smooth",
+      behavior: entranceDurationMs > DEFAULT_ENTRANCE_MS ? "auto" : "smooth",
       block: "nearest",
     });
-  }, [entranceMessageId]);
+  }, [entranceDurationMs, entranceMessageId]);
 
   return (
     <div
@@ -94,156 +324,35 @@ const ChatMessages = ({
             </span>
           </button>
         ) : null}
-        {messages.map((message, index) => {
-          const isUnassigned = !message.userId;
-          const sender = usersById[message.userId];
-          const isOwn =
-            !isUnassigned &&
-            Boolean(selfUserId) &&
-            message.userId === selfUserId;
-          const previousMessage = index > 0 ? messages[index - 1] : undefined;
-          const isConsecutiveFromSender =
-            previousMessage?.userId === message.userId;
-          const useCompactSpacing = isOwn && isConsecutiveFromSender;
-          const isEntrance = message.id === entranceMessageId;
-          const showLineHere =
-            showInsertLine &&
-            (insertAt === index ||
-              (insertAt === messages.length && index === messages.length - 1));
-          const lineAtBottom = showLineHere && insertAt === messages.length;
-
-          return (
-            <div
-              key={message.id}
-              ref={isEntrance ? entranceRef : undefined}
-              className={cn(
-                "relative",
-                isEntrance &&
-                  "animate-in fade-in slide-in-from-bottom-4 duration-300 fill-mode-both"
-              )}
-            >
-              {showLineHere && !lineAtBottom ? (
-                <div
-                  className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-0.5 -translate-y-1/2 rounded-full bg-[var(--chat-accent)]"
-                  aria-hidden
-                />
-              ) : null}
-              <div
-                draggable={editable}
-                className={cn(
-                  "scroll-mb-4",
-                  !useCompactSpacing && "space-y-3",
-                  editable && "cursor-grab active:cursor-grabbing"
-                )}
-                onDragStart={(event) => {
-                  if (!editable) {
-                    return;
-                  }
-                  setDragIndex(index);
-                  event.dataTransfer.effectAllowed = "move";
-                  event.dataTransfer.setData(DRAG_TYPE, String(index));
-                }}
-                onDragOver={(event) => {
-                  if (!editable || dragIndex === null) {
-                    return;
-                  }
-                  event.preventDefault();
-                  event.dataTransfer.dropEffect = "move";
-                  const bounds = event.currentTarget.getBoundingClientRect();
-                  setInsertAt(resolveInsertAt(index, event.clientY, bounds));
-                }}
-                onDragLeave={(event) => {
-                  if (
-                    !event.currentTarget.contains(event.relatedTarget as Node)
-                  ) {
-                    setInsertAt(null);
-                  }
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  const fromRaw = event.dataTransfer.getData(DRAG_TYPE);
-                  const fromIndex = Number(fromRaw);
-                  const bounds = event.currentTarget.getBoundingClientRect();
-                  let toIndex = resolveInsertAt(index, event.clientY, bounds);
-                  if (
-                    Number.isNaN(fromIndex) ||
-                    fromIndex < 0 ||
-                    fromIndex >= messages.length
-                  ) {
-                    setDragIndex(null);
-                    setInsertAt(null);
-                    return;
-                  }
-                  if (fromIndex < toIndex) {
-                    toIndex -= 1;
-                  }
-                  if (fromIndex !== toIndex) {
-                    onReorderMessage?.(fromIndex, toIndex);
-                  }
-                  setDragIndex(null);
-                  setInsertAt(null);
-                }}
-                onDragEnd={() => {
-                  setDragIndex(null);
-                  setInsertAt(null);
-                }}
-              >
-                <div className={cn(useCompactSpacing ? "" : "space-y-3")}>
-                  {index === 0 ? (
-                    <div className="flex justify-center">
-                      <span
-                        className={dateLabelClassName}
-                        style={dateLabelStyle}
-                      >
-                        {DATE_LABEL}
-                      </span>
-                    </div>
-                  ) : null}
-                  <ChatMessage
-                    editable={editable}
-                    users={users}
-                    states={{
-                      content: message.content,
-                      hasPrecedingMessage: index > 0,
-                      id: message.id,
-                      isConsecutiveFromSender,
-                      isGroup: showNameSpacer || isUnassigned || editable,
-                      isOwn,
-                      isUnassigned,
-                      senderAvatarUrl: sender?.avatarUrl,
-                      senderName: sender
-                        ? resolveDisplayName(viewer, sender, locale)
-                        : undefined,
-                    }}
-                    actions={{
-                      onContentChange: (content) => {
-                        onMessageContentChange?.(message.id, content);
-                      },
-                      onDelete: () => {
-                        onDeleteMessage?.(message.id);
-                      },
-                      onInsertAbove: () => {
-                        onInsertMessage?.(message.id, "above");
-                      },
-                      onInsertBelow: () => {
-                        onInsertMessage?.(message.id, "below");
-                      },
-                      onUserChange: (userId) => {
-                        onMessageUserChange?.(message.id, userId);
-                      },
-                    }}
-                  />
-                </div>
-              </div>
-              {lineAtBottom ? (
-                <div
-                  className="pointer-events-none absolute right-0 bottom-0 left-0 z-20 h-0.5 translate-y-1/2 rounded-full bg-[var(--chat-accent)]"
-                  aria-hidden
-                />
-              ) : null}
-            </div>
-          );
-        })}
+        {messages.map((message, index) => (
+          <ChatMessageRow
+            key={message.id}
+            message={message}
+            index={index}
+            messageCount={messages.length}
+            previousUserId={index > 0 ? messages[index - 1]?.userId : undefined}
+            usersById={usersById}
+            users={users}
+            viewer={viewer}
+            selfUserId={selfUserId}
+            editable={editable}
+            showNameSpacer={showNameSpacer}
+            entranceMessageId={entranceMessageId}
+            entranceDurationMs={entranceDurationMs}
+            entranceRef={entranceRef}
+            dragIndex={dragIndex}
+            insertAt={insertAt}
+            showInsertLine={showInsertLine}
+            locale={locale}
+            setDragIndex={setDragIndex}
+            setInsertAt={setInsertAt}
+            onMessageContentChange={onMessageContentChange}
+            onMessageUserChange={onMessageUserChange}
+            onInsertMessage={onInsertMessage}
+            onDeleteMessage={onDeleteMessage}
+            onReorderMessage={onReorderMessage}
+          />
+        ))}
       </div>
     </div>
   );

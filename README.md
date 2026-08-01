@@ -4,12 +4,12 @@ Studio for composing **LINE-style chat** and **lock-screen notification** previe
 
 ## Features
 
-- **Chat mode** — edit messages, senders, and titles; hover for insert / delete; playback with adjustable gap
+- **Chat mode** — edit messages, senders, and titles; hover for insert / delete; playback with adjustable gap; **export playback as WebM/MP4 video**
 - **Notif mode** — edit lock-screen date, time, weekday, and notification rows (sender, message, relative time); clear all via the center ✕
-- **Export** — download the notif preview as a PNG
+- **Export** — download the notif preview as a PNG; download chat playback as video
 - **i18n** — Chinese (default), English, Japanese (`/zh`, `/en`, `/ja`); language select in the header
 - **Theme** — light / dark toggle
-- **Presets** — JSON under `public/presets/` (users, chats, notifications)
+- **Presets** — JSON under `public/presets/` (users, chats, notifications); chat drafts persist in `localStorage`
 
 ## Stack
 

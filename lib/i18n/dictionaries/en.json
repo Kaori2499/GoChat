@@ -26,7 +26,9 @@
   "export": {
     "label": "Export",
     "button": "Export PNG",
-    "exporting": "Exporting…"
+    "exporting": "Exporting…",
+    "videoButton": "Export video",
+    "exportingVideo": "Rendering 60fps… (click to cancel)"
   },
   "presets": {
     "label": "Presets",

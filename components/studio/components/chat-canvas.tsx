@@ -1,5 +1,7 @@
 "use client";
 
+import type { RefObject } from "react";
+
 import { Chat } from "@/components/chat/chat";
 
 import { useCatalogStore } from "../hooks/use-catalog-store";
@@ -13,7 +15,11 @@ import {
   resolveEntranceMessageId,
 } from "../lib/studio.lib";
 
-export const StudioChatCanvas = () => {
+export const StudioChatCanvas = ({
+  exportRootRef,
+}: {
+  exportRootRef?: RefObject<HTMLDivElement | null>;
+}) => {
   const selectedId = useCatalogStore((state) => state.selectedId);
   const presets = useCatalogStore((state) => state.presets);
   const byChatId = useDraftsStore((state) => state.byChatId);
@@ -26,6 +32,7 @@ export const StudioChatCanvas = () => {
   const addMessage = useDraftsStore((state) => state.addMessage);
   const isPlaying = usePlaybackStore((state) => state.isPlaying);
   const visibleCount = usePlaybackStore((state) => state.visibleCount);
+  const timeScale = usePlaybackStore((state) => state.timeScale);
   const activeUserId = useSessionStore((state) => state.activeUserId);
   const usersById = useSessionStore((state) => state.usersById);
 
@@ -48,6 +55,7 @@ export const StudioChatCanvas = () => {
     isPlaying,
     visibleCount
   );
+  const entranceDurationMs = Math.round(300 / timeScale);
 
   return (
     <Chat.Preview
@@ -57,6 +65,8 @@ export const StudioChatCanvas = () => {
       selfUserId={activeUserId === NONE_USER ? undefined : activeUserId}
       editable={!isPlaying}
       entranceMessageId={entranceMessageId}
+      entranceDurationMs={entranceDurationMs}
+      exportRootRef={exportRootRef}
       onTitleChange={(nextTitle) => {
         setTitle(preset.id, nextTitle);
       }}

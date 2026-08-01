@@ -26,7 +26,9 @@
   "export": {
     "label": "書き出し",
     "button": "PNG を書き出し",
-    "exporting": "書き出し中…"
+    "exporting": "書き出し中…",
+    "videoButton": "動画を書き出し",
+    "exportingVideo": "60fpsレンダリング中…（クリックで取消）"
   },
   "presets": {
     "label": "プリセット",

@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, RefObject } from "react";
 
 import type { LocalizedName } from "@/lib/user-names";
 
@@ -122,6 +122,8 @@ export interface ChatMessagesProps {
   editable?: boolean;
   /** Message id that should play the entrance slide-up animation. */
   entranceMessageId?: string;
+  /** Entrance animation length in ms (scaled during slow video export). */
+  entranceDurationMs?: number;
   onMessageContentChange?: (messageId: string, content: string) => void;
   onMessageUserChange?: (messageId: string, userId: string) => void;
   onInsertMessage?: (anchorId: string, position: "above" | "below") => void;
@@ -140,6 +142,8 @@ export interface ChatPreviewProps {
   theme?: ChatTheme;
   editable?: boolean;
   entranceMessageId?: string;
+  entranceDurationMs?: number;
+  exportRootRef?: RefObject<HTMLDivElement | null>;
   onTitleChange?: (title: string) => void;
   onMessageContentChange?: (messageId: string, content: string) => void;
   onMessageUserChange?: (messageId: string, userId: string) => void;

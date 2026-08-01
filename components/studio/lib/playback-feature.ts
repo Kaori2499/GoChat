@@ -28,21 +28,29 @@ export const playbackFeature = (): RuntimeFeature<
           state.playback.gapMs = gapMs;
         });
       },
+      setTimeScale: (timeScale) => {
+        set((state) => {
+          state.playback.timeScale = Math.min(1, Math.max(1 / 32, timeScale));
+        });
+      },
       startPlayback: (messageCount) => {
         if (messageCount <= 0) {
           return;
         }
         set((state) => {
           state.playback.isPlaying = true;
-          state.playback.visibleCount = 0;
+          // First message appears immediately; gap only applies between later ones.
+          state.playback.visibleCount = 1;
         });
       },
       stopPlayback: () => {
         set((state) => {
           state.playback.isPlaying = false;
+          state.playback.timeScale = 1;
           state.playback.visibleCount = 0;
         });
       },
+      timeScale: 1,
       visibleCount: 0,
     },
   }),

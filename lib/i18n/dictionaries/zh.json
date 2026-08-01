@@ -26,7 +26,9 @@
   "export": {
     "label": "导出",
     "button": "导出 PNG",
-    "exporting": "导出中…"
+    "exporting": "导出中…",
+    "videoButton": "导出视频",
+    "exportingVideo": "正在渲染 60fps…（点击取消）"
   },
   "presets": {
     "label": "预设",

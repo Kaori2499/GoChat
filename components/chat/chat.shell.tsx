@@ -10,9 +10,11 @@ const ChatShell = ({
   children,
   wallpaperUrl,
   wallpaperOpacity = 1,
+  ref,
   ...props
 }: ChatShellProps) => (
   <div
+    ref={ref}
     data-slot="chat"
     className={cn(
       "chat-surface relative isolate flex h-full w-full flex-col overflow-hidden",
