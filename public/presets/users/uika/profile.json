@@ -1,5 +1,16 @@
 {
   "id": "uika",
-  "name": "初华",
+  "names": {
+    "ch": "初华",
+    "ja": "初华",
+    "en": "uika"
+  },
+  "aliases": {
+    "sakiko": {
+      "ch": "小祥",
+      "ja": "小祥",
+      "en": "saki chan"
+    }
+  },
   "phoneCaseColor": "#f472b6"
 }

@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { Bell, MessageCircle } from "lucide-react"
+import { Bell, MessageCircle } from "lucide-react";
 
-import { useDictionary } from "@/components/i18n/dictionary-provider"
-import { Button } from "@/components/ui/button"
+import { useDictionary } from "@/components/i18n/dictionary-provider";
+import { Button } from "@/components/ui/button";
 
-import { useSessionStore } from "../hooks/use-session-store"
+import { useSessionStore } from "../hooks/use-session-store";
 
 export const StudioModeToggle = () => {
-  const mode = useSessionStore((state) => state.mode)
-  const setMode = useSessionStore((state) => state.setMode)
-  const dict = useDictionary()
+  const mode = useSessionStore((state) => state.mode);
+  const setMode = useSessionStore((state) => state.setMode);
+  const dict = useDictionary();
 
   return (
     <div
@@ -36,5 +36,5 @@ export const StudioModeToggle = () => {
         {dict.mode.chat}
       </Button>
     </div>
-  )
-}
+  );
+};

@@ -1,11 +1,11 @@
-import type { CSSProperties } from "react"
+import type { CSSProperties } from "react";
 
-import type { ChatTheme, ChatThemeId } from "./chat.types"
+import type { ChatTheme, ChatThemeId } from "./chat.types";
 
 export const CHAT_FONT =
-  '-apple-system, "Hiragino Sans", "Yu Gothic", "Helvetica Neue", sans-serif'
+  '-apple-system, "Hiragino Sans", "Yu Gothic", "Helvetica Neue", sans-serif';
 
-export const CHAT_RADIUS = "1.125rem"
+export const CHAT_RADIUS = "1.125rem";
 
 export const chatThemes: ChatTheme[] = [
   {
@@ -50,14 +50,13 @@ export const chatThemes: ChatTheme[] = [
     id: "dark",
     name: "Dark",
   },
-]
+];
 
-export const getChatTheme = (themeId: ChatThemeId = "light"): ChatTheme => {
-  return chatThemes.find((theme) => theme.id === themeId) ?? chatThemes[0]
-}
+export const getChatTheme = (themeId: ChatThemeId = "light"): ChatTheme =>
+  chatThemes.find((theme) => theme.id === themeId) ?? chatThemes[0];
 
 export const chatThemeStyle = (theme: ChatTheme): CSSProperties => {
-  const { colors } = theme
+  const { colors } = theme;
   return {
     "--bubble-received": colors.bubbleReceived,
     "--bubble-received-text": colors.bubbleReceivedText,
@@ -79,5 +78,5 @@ export const chatThemeStyle = (theme: ChatTheme): CSSProperties => {
     "--layout-font-body": CHAT_FONT,
     "--layout-font-header": CHAT_FONT,
     fontFamily: CHAT_FONT,
-  } as CSSProperties
-}
+  } as CSSProperties;
+};

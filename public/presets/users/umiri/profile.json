@@ -1,5 +1,10 @@
 {
   "id": "umiri",
-  "name": "海铃",
+  "names": {
+    "ch": "海铃",
+    "ja": "海鈴",
+    "en": "Umiri"
+  },
+  "aliases": {},
   "phoneCaseColor": "#6366f1"
 }

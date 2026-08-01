@@ -1,8 +1,12 @@
-﻿"use client";
+"use client";
 
 import { Plus } from "lucide-react";
 
-import { useDictionary } from "@/components/i18n/dictionary-provider";
+import {
+  useDictionary,
+  useLocale,
+} from "@/components/i18n/dictionary-provider";
+import { resolveDisplayName } from "@/lib/user-names";
 import { cn } from "@/lib/utils";
 
 import { resolveNotifSender, resolveNotifTimeLabel } from "./notif.helpers";
@@ -12,6 +16,7 @@ import type { NotifStackProps } from "./notif.types";
 const NotifStack = ({
   notifications,
   usersById,
+  selfUserId,
   editable = false,
   onAddNotification,
   onContentChange,
@@ -22,7 +27,9 @@ const NotifStack = ({
   className,
 }: NotifStackProps) => {
   const dict = useDictionary();
+  const locale = useLocale();
   const users = Object.values(usersById);
+  const viewer = selfUserId ? usersById[selfUserId] : undefined;
 
   if (notifications.length === 0) {
     if (!editable) {
@@ -75,7 +82,9 @@ const NotifStack = ({
               content: item.message.content,
               isUnassigned,
               senderAvatarUrl: sender?.avatarUrl,
-              senderName: sender?.name ?? item.chatTitle,
+              senderName: sender
+                ? resolveDisplayName(viewer, sender, locale)
+                : item.chatTitle,
               timeLabel: resolveNotifTimeLabel(item),
             }}
             actions={{

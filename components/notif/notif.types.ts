@@ -82,6 +82,7 @@ export interface NotifItemProps {
 export interface NotifStackProps {
   notifications: NotifItemData[];
   usersById: Record<string, ChatUser>;
+  selfUserId?: string;
   editable?: boolean;
   onAddNotification?: () => void;
   onContentChange?: (notifId: string, content: string) => void;

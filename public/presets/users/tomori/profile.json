@@ -1,5 +1,31 @@
 {
   "id": "tomori",
-  "name": "燈",
+  "names": {
+    "ch": "灯",
+    "ja": "燈",
+    "en": "Tomori"
+  },
+  "aliases": {
+    "anon": {
+      "ch": "小爱",
+      "ja": "小愛",
+      "en": "ano chan"
+    },
+    "soyo": {
+      "ch": "小素世",
+      "ja": "小素世",
+      "en": "soyo chan"
+    },
+    "taki": {
+      "ch": "小立希",
+      "ja": "小立希",
+      "en": "taki chan"
+    },
+    "rana": {
+      "ch": "小乐奈",
+      "ja": "小乐奈",
+      "en": "rana chan"
+    }
+  },
   "phoneCaseColor": "#6b9e8a"
 }

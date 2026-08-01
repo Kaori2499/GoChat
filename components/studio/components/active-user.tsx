@@ -1,23 +1,28 @@
-"use client"
+"use client";
 
-import { useDictionary } from "@/components/i18n/dictionary-provider"
+import {
+  useDictionary,
+  useLocale,
+} from "@/components/i18n/dictionary-provider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import { resolveUserName } from "@/lib/user-names";
 
-import { useSessionStore } from "../hooks/use-session-store"
-import { NONE_USER } from "../lib/studio.lib"
+import { useSessionStore } from "../hooks/use-session-store";
+import { NONE_USER } from "../lib/studio.lib";
 
 export const StudioActiveUser = () => {
-  const activeUserId = useSessionStore((state) => state.activeUserId)
-  const setActiveUserId = useSessionStore((state) => state.setActiveUserId)
-  const usersById = useSessionStore((state) => state.usersById)
-  const users = Object.values(usersById)
-  const dict = useDictionary()
+  const activeUserId = useSessionStore((state) => state.activeUserId);
+  const setActiveUserId = useSessionStore((state) => state.setActiveUserId);
+  const usersById = useSessionStore((state) => state.usersById);
+  const users = Object.values(usersById);
+  const dict = useDictionary();
+  const locale = useLocale();
 
   return (
     <div data-slot="studio-active-user">
@@ -28,7 +33,7 @@ export const StudioActiveUser = () => {
         value={activeUserId}
         onValueChange={(value) => {
           if (typeof value === "string") {
-            setActiveUserId(value)
+            setActiveUserId(value);
           }
         }}
       >
@@ -36,7 +41,9 @@ export const StudioActiveUser = () => {
           <SelectValue placeholder={dict.activeUser.none}>
             {activeUserId === NONE_USER
               ? dict.activeUser.none
-              : usersById[activeUserId]?.name}
+              : (usersById[activeUserId]
+                ? resolveUserName(usersById[activeUserId], locale)
+                : dict.activeUser.none)}
           </SelectValue>
         </SelectTrigger>
         <SelectContent align="start" alignItemWithTrigger={false}>
@@ -48,11 +55,11 @@ export const StudioActiveUser = () => {
                 alt=""
                 className="size-5 rounded-full object-cover"
               />
-              {user.name}
+              {resolveUserName(user, locale)}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
     </div>
-  )
-}
+  );
+};

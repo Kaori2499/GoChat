@@ -10,7 +10,9 @@ export const SESSION_FEATURE_KEY = "session";
 export interface CatalogStore {
   presets: ChatPreset[];
   selectedId: string;
+  removedPresetIds: string[];
   addEmptyPreset: () => void;
+  deletePreset: (chatId: string) => void;
   selectPreset: (chatId: string) => void;
   syncPresets: (presets: ChatPreset[]) => void;
 }

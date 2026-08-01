@@ -1,5 +1,10 @@
 {
   "id": "nyamu",
-  "name": "喵梦",
+  "names": {
+    "ch": "喵梦",
+    "ja": "ニャム",
+    "en": "Nyamu"
+  },
+  "aliases": {},
   "phoneCaseColor": "#fb923c"
 }

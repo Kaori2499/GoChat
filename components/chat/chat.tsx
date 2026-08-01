@@ -1,4 +1,4 @@
-import { ChatBody, ChatFooter } from "./chat.body"
+import { ChatBody, ChatFooter } from "./chat.body";
 import {
   ChatHeader,
   ChatHeaderActions,
@@ -7,12 +7,12 @@ import {
   ChatHeaderDirect,
   ChatHeaderGroup,
   ChatTitle,
-} from "./chat.header"
-import { ChatInput } from "./chat.input"
-import { ChatMessage } from "./chat.message"
-import { ChatMessages } from "./chat.messages"
-import { ChatPreview } from "./chat.preview"
-import { ChatShell } from "./chat.shell"
+} from "./chat.header";
+import { ChatInput } from "./chat.input";
+import { ChatMessage } from "./chat.message";
+import { ChatMessages } from "./chat.messages";
+import { ChatPreview } from "./chat.preview";
+import { ChatShell } from "./chat.shell";
 
 export type {
   ChatMessage as ChatMessageData,
@@ -26,15 +26,15 @@ export type {
   ChatTheme,
   ChatThemeId,
   ChatUser,
-} from "./chat.types"
+} from "./chat.types";
 
-export { getChatTheme } from "./chat.theme"
+export { getChatTheme } from "./chat.theme";
 export {
   getParticipantIds,
   isGroupChat,
   resolveHeaderUser,
   resolveWallpaperUrl,
-} from "./chat.helpers"
+} from "./chat.helpers";
 
 export const Chat = Object.assign(ChatShell, {
   Body: ChatBody,
@@ -50,4 +50,4 @@ export const Chat = Object.assign(ChatShell, {
   Messages: ChatMessages,
   Preview: ChatPreview,
   Title: ChatTitle,
-})
+});

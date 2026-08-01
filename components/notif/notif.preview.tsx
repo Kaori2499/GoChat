@@ -72,6 +72,7 @@ const NotifPreview = ({
                 <NotifStack
                   notifications={notifications}
                   usersById={usersById}
+                  selfUserId={selfUserId}
                   editable={editable}
                   onAddNotification={onAddNotification}
                   onContentChange={onContentChange}

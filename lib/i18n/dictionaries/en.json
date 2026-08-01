@@ -30,7 +30,8 @@
   },
   "presets": {
     "label": "Presets",
-    "add": "Add empty preset"
+    "add": "Add empty preset",
+    "delete": "Delete chat"
   },
   "roadmap": {
     "label": "Roadmap",

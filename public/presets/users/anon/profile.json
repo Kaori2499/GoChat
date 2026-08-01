@@ -1,5 +1,10 @@
 {
   "id": "anon",
-  "name": "愛音",
+  "names": {
+    "ch": "爱音",
+    "ja": "愛音",
+    "en": "Anon"
+  },
+  "aliases": {},
   "phoneCaseColor": "#f472b6"
 }

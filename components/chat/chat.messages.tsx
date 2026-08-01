@@ -1,33 +1,37 @@
-"use client"
+"use client";
 
-import { Plus } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-import { useDictionary } from "@/components/i18n/dictionary-provider"
-import { cn } from "@/lib/utils"
+import {
+  useDictionary,
+  useLocale,
+} from "@/components/i18n/dictionary-provider";
+import { resolveDisplayName } from "@/lib/user-names";
+import { cn } from "@/lib/utils";
 
-import { isGroupChat } from "./chat.helpers"
-import { ChatMessage } from "./chat.message"
-import type { ChatMessagesProps } from "./chat.types"
+import { isGroupChat } from "./chat.helpers";
+import { ChatMessage } from "./chat.message";
+import type { ChatMessagesProps } from "./chat.types";
 
-const DATE_LABEL = "今日"
-const DRAG_TYPE = "application/x-gochat-message-index"
+const DATE_LABEL = "今日";
+const DRAG_TYPE = "application/x-gochat-message-index";
 
 const dateLabelClassName =
-  "mx-auto w-fit rounded-full px-3 py-1 text-center text-xs font-semibold text-white shadow-[0_1px_4px_rgba(0,0,0,0.35)] backdrop-blur-md"
+  "mx-auto w-fit rounded-full px-3 py-1 text-center text-xs font-semibold text-white shadow-[0_1px_4px_rgba(0,0,0,0.35)] backdrop-blur-md";
 
 const dateLabelStyle = {
   WebkitBackdropFilter: "blur(10px) saturate(1.2)",
   backdropFilter: "blur(10px) saturate(1.2)",
   backgroundColor: "rgba(0, 0, 0, 0.5)",
   textShadow: "0 1px 2px rgba(0, 0, 0, 0.65)",
-} as const
+} as const;
 
 const resolveInsertAt = (
   index: number,
   clientY: number,
-  bounds: DOMRect,
-): number => (clientY < bounds.top + bounds.height / 2 ? index : index + 1)
+  bounds: DOMRect
+): number => (clientY < bounds.top + bounds.height / 2 ? index : index + 1);
 
 const ChatMessages = ({
   messages,
@@ -43,35 +47,37 @@ const ChatMessages = ({
   onAddMessage,
   className,
 }: ChatMessagesProps) => {
-  const dict = useDictionary()
-  const showNameSpacer = isGroupChat(messages)
-  const users = Object.values(usersById)
-  const [dragIndex, setDragIndex] = useState<number | null>(null)
-  const [insertAt, setInsertAt] = useState<number | null>(null)
-  const entranceRef = useRef<HTMLDivElement>(null)
+  const dict = useDictionary();
+  const locale = useLocale();
+  const showNameSpacer = isGroupChat(messages);
+  const users = Object.values(usersById);
+  const viewer = selfUserId ? usersById[selfUserId] : undefined;
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [insertAt, setInsertAt] = useState<number | null>(null);
+  const entranceRef = useRef<HTMLDivElement>(null);
 
   const showInsertLine =
     insertAt !== null &&
     dragIndex !== null &&
     insertAt !== dragIndex &&
-    insertAt !== dragIndex + 1
+    insertAt !== dragIndex + 1;
 
   useEffect(() => {
     if (!entranceMessageId || !entranceRef.current) {
-      return
+      return;
     }
     entranceRef.current.scrollIntoView({
       behavior: "smooth",
       block: "nearest",
-    })
-  }, [entranceMessageId])
+    });
+  }, [entranceMessageId]);
 
   return (
     <div
       data-slot="chat-messages"
       className={cn(
         "conversation-scroll relative z-10 h-full min-h-0 overflow-y-auto overscroll-contain hide-scrollbar",
-        className,
+        className
       )}
     >
       <div className="flex min-h-full flex-col gap-2 px-3 pt-4 pb-6">
@@ -89,20 +95,22 @@ const ChatMessages = ({
           </button>
         ) : null}
         {messages.map((message, index) => {
-          const isUnassigned = !message.userId
-          const sender = usersById[message.userId]
+          const isUnassigned = !message.userId;
+          const sender = usersById[message.userId];
           const isOwn =
-            !isUnassigned && Boolean(selfUserId) && message.userId === selfUserId
-          const previousMessage = index > 0 ? messages[index - 1] : undefined
+            !isUnassigned &&
+            Boolean(selfUserId) &&
+            message.userId === selfUserId;
+          const previousMessage = index > 0 ? messages[index - 1] : undefined;
           const isConsecutiveFromSender =
-            previousMessage?.userId === message.userId
-          const useCompactSpacing = isOwn && isConsecutiveFromSender
-          const isEntrance = message.id === entranceMessageId
+            previousMessage?.userId === message.userId;
+          const useCompactSpacing = isOwn && isConsecutiveFromSender;
+          const isEntrance = message.id === entranceMessageId;
           const showLineHere =
             showInsertLine &&
             (insertAt === index ||
-              (insertAt === messages.length && index === messages.length - 1))
-          const lineAtBottom = showLineHere && insertAt === messages.length
+              (insertAt === messages.length && index === messages.length - 1));
+          const lineAtBottom = showLineHere && insertAt === messages.length;
 
           return (
             <div
@@ -111,7 +119,7 @@ const ChatMessages = ({
               className={cn(
                 "relative",
                 isEntrance &&
-                  "animate-in fade-in slide-in-from-bottom-4 duration-300 fill-mode-both",
+                  "animate-in fade-in slide-in-from-bottom-4 duration-300 fill-mode-both"
               )}
             >
               {showLineHere && !lineAtBottom ? (
@@ -125,59 +133,59 @@ const ChatMessages = ({
                 className={cn(
                   "scroll-mb-4",
                   !useCompactSpacing && "space-y-3",
-                  editable && "cursor-grab active:cursor-grabbing",
+                  editable && "cursor-grab active:cursor-grabbing"
                 )}
                 onDragStart={(event) => {
                   if (!editable) {
-                    return
+                    return;
                   }
-                  setDragIndex(index)
-                  event.dataTransfer.effectAllowed = "move"
-                  event.dataTransfer.setData(DRAG_TYPE, String(index))
+                  setDragIndex(index);
+                  event.dataTransfer.effectAllowed = "move";
+                  event.dataTransfer.setData(DRAG_TYPE, String(index));
                 }}
                 onDragOver={(event) => {
                   if (!editable || dragIndex === null) {
-                    return
+                    return;
                   }
-                  event.preventDefault()
-                  event.dataTransfer.dropEffect = "move"
-                  const bounds = event.currentTarget.getBoundingClientRect()
-                  setInsertAt(resolveInsertAt(index, event.clientY, bounds))
+                  event.preventDefault();
+                  event.dataTransfer.dropEffect = "move";
+                  const bounds = event.currentTarget.getBoundingClientRect();
+                  setInsertAt(resolveInsertAt(index, event.clientY, bounds));
                 }}
                 onDragLeave={(event) => {
                   if (
                     !event.currentTarget.contains(event.relatedTarget as Node)
                   ) {
-                    setInsertAt(null)
+                    setInsertAt(null);
                   }
                 }}
                 onDrop={(event) => {
-                  event.preventDefault()
-                  const fromRaw = event.dataTransfer.getData(DRAG_TYPE)
-                  const fromIndex = Number(fromRaw)
-                  const bounds = event.currentTarget.getBoundingClientRect()
-                  let toIndex = resolveInsertAt(index, event.clientY, bounds)
+                  event.preventDefault();
+                  const fromRaw = event.dataTransfer.getData(DRAG_TYPE);
+                  const fromIndex = Number(fromRaw);
+                  const bounds = event.currentTarget.getBoundingClientRect();
+                  let toIndex = resolveInsertAt(index, event.clientY, bounds);
                   if (
                     Number.isNaN(fromIndex) ||
                     fromIndex < 0 ||
                     fromIndex >= messages.length
                   ) {
-                    setDragIndex(null)
-                    setInsertAt(null)
-                    return
+                    setDragIndex(null);
+                    setInsertAt(null);
+                    return;
                   }
                   if (fromIndex < toIndex) {
-                    toIndex -= 1
+                    toIndex -= 1;
                   }
                   if (fromIndex !== toIndex) {
-                    onReorderMessage?.(fromIndex, toIndex)
+                    onReorderMessage?.(fromIndex, toIndex);
                   }
-                  setDragIndex(null)
-                  setInsertAt(null)
+                  setDragIndex(null);
+                  setInsertAt(null);
                 }}
                 onDragEnd={() => {
-                  setDragIndex(null)
-                  setInsertAt(null)
+                  setDragIndex(null);
+                  setInsertAt(null);
                 }}
               >
                 <div className={cn(useCompactSpacing ? "" : "space-y-3")}>
@@ -203,23 +211,25 @@ const ChatMessages = ({
                       isOwn,
                       isUnassigned,
                       senderAvatarUrl: sender?.avatarUrl,
-                      senderName: sender?.name,
+                      senderName: sender
+                        ? resolveDisplayName(viewer, sender, locale)
+                        : undefined,
                     }}
                     actions={{
                       onContentChange: (content) => {
-                        onMessageContentChange?.(message.id, content)
+                        onMessageContentChange?.(message.id, content);
                       },
                       onDelete: () => {
-                        onDeleteMessage?.(message.id)
+                        onDeleteMessage?.(message.id);
                       },
                       onInsertAbove: () => {
-                        onInsertMessage?.(message.id, "above")
+                        onInsertMessage?.(message.id, "above");
                       },
                       onInsertBelow: () => {
-                        onInsertMessage?.(message.id, "below")
+                        onInsertMessage?.(message.id, "below");
                       },
                       onUserChange: (userId) => {
-                        onMessageUserChange?.(message.id, userId)
+                        onMessageUserChange?.(message.id, userId);
                       },
                     }}
                   />
@@ -232,13 +242,13 @@ const ChatMessages = ({
                 />
               ) : null}
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
-ChatMessages.displayName = "Chat.Messages"
+ChatMessages.displayName = "Chat.Messages";
 
-export { ChatMessages }
+export { ChatMessages };

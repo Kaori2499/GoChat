@@ -3,7 +3,10 @@
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 
 import type { ChatUser } from "@/components/chat/chat.types";
-import { useDictionary } from "@/components/i18n/dictionary-provider";
+import {
+  useDictionary,
+  useLocale,
+} from "@/components/i18n/dictionary-provider";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { resolveUserName } from "@/lib/user-names";
 import { cn } from "@/lib/utils";
 
 import { DEFAULT_NOTIF_TIME_LABEL } from "./notif.helpers";
@@ -30,6 +34,7 @@ const NotifItem = ({
   className,
 }: NotifItemProps) => {
   const dict = useDictionary();
+  const locale = useLocale();
   const {
     content,
     timeLabel,
@@ -106,7 +111,9 @@ const NotifItem = ({
                     alt=""
                     className="size-6 rounded-full object-cover"
                   />
-                  <span className="truncate">{user.name}</span>
+                  <span className="truncate">
+                    {resolveUserName(user, locale)}
+                  </span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -131,7 +138,9 @@ const NotifItem = ({
               isUnassigned && "text-black/40"
             )}
           >
-            {isUnassigned ? dict.notif.selectUser : senderName || dict.notif.unknown}
+            {isUnassigned
+              ? dict.notif.selectUser
+              : senderName || dict.notif.unknown}
           </h3>
           {editable ? (
             <span

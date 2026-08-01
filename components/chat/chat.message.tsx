@@ -3,6 +3,7 @@
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import type { CSSProperties } from "react";
 
+import { useLocale } from "@/components/i18n/dictionary-provider";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { resolveUserName } from "@/lib/user-names";
 import { cn } from "@/lib/utils";
 
 import type { ChatMessageProps } from "./chat.types";
@@ -29,25 +31,23 @@ const BubbleHorn = ({
 }: {
   color: string;
   className?: string;
-}) => {
-  return (
-    <svg
-      className={className}
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path
-        d="M8 7C8.12296 11.2133 9.73833 14.4151 12 18L16 12C12.3508 10.7932 10.1109 9.36876 8 7Z"
-        fill={color}
-        stroke={color}
-      />
-    </svg>
-  );
-};
+}) => (
+  <svg
+    className={className}
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M8 7C8.12296 11.2133 9.73833 14.4151 12 18L16 12C12.3508 10.7932 10.1109 9.36876 8 7Z"
+      fill={color}
+      stroke={color}
+    />
+  </svg>
+);
 
 const ChatMessage = ({
   states,
@@ -56,6 +56,7 @@ const ChatMessage = ({
   users = [],
   className,
 }: ChatMessageProps) => {
+  const locale = useLocale();
   const {
     content,
     isOwn,
@@ -89,18 +90,18 @@ const ChatMessage = ({
         className="h-full w-full object-cover"
         draggable={false}
       />
-    ) : isUnassigned ? null : (
+    ) : (isUnassigned ? null : (
       <span className="text-[0.7rem] font-semibold text-[var(--chat-muted)]">
         {avatarFallback}
       </span>
-    );
+    ));
 
   const avatarShellClassName = cn(
     avatarClassName,
     isUnassigned
       ? "border-dashed border-white/80 bg-white/30"
       : "bg-[var(--chat-border)]",
-    editable && "cursor-pointer",
+    editable && "cursor-pointer"
   );
 
   const avatarNode = editable ? (
@@ -129,7 +130,7 @@ const ChatMessage = ({
               alt=""
               className="size-6 rounded-full object-cover"
             />
-            <span className="truncate">{user.name}</span>
+            <span className="truncate">{resolveUserName(user, locale)}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -144,7 +145,7 @@ const ChatMessage = ({
     <span
       className={cn(
         senderNameClassName,
-        "text-left text-[var(--chat-muted)] [-webkit-text-stroke:0]",
+        "text-left text-[var(--chat-muted)] [-webkit-text-stroke:0]"
       )}
     >
       Select user
@@ -193,7 +194,7 @@ const ChatMessage = ({
           "pointer-events-none absolute z-10 h-6 w-6",
           isOwn
             ? "right-[-8px] top-[-4px] translate-x-[2px] -translate-y-[2px] scale-x-[-1]"
-            : "left-[-8px] top-[-4px] -translate-x-[2px] -translate-y-[2px]",
+            : "left-[-8px] top-[-4px] -translate-x-[2px] -translate-y-[2px]"
         )}
       />
       <div
@@ -209,7 +210,7 @@ const ChatMessage = ({
     <div
       className={cn(
         "absolute top-1/2 z-20 flex -translate-y-1/2 flex-row gap-0.5 opacity-0 transition-opacity group-hover/message:opacity-100 focus-within:opacity-100",
-        isOwn ? "right-full mr-1" : "left-full ml-1",
+        isOwn ? "right-full mr-1" : "left-full ml-1"
       )}
       onMouseDown={(event) => event.stopPropagation()}
     >
@@ -281,7 +282,9 @@ const ChatMessage = ({
     >
       <div className="relative shrink-0">{avatarNode}</div>
       <div className="relative flex max-w-[68%] min-w-0 flex-col gap-0.5">
-        <div className="relative flex items-center gap-1 px-0.5">{nameNode}</div>
+        <div className="relative flex items-center gap-1 px-0.5">
+          {nameNode}
+        </div>
         <div className="relative flex justify-start">
           <div className="relative max-w-full">
             {bubbleContent}

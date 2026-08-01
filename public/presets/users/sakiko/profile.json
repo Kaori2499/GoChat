@@ -1,5 +1,10 @@
 {
   "id": "sakiko",
-  "name": "祥子",
+  "names": {
+    "ch": "祥子",
+    "ja": "祥子",
+    "en": "Sakiko"
+  },
+  "aliases": {},
   "phoneCaseColor": "#fbbf24"
 }

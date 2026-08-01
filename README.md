@@ -36,16 +36,16 @@ npm run fix     # auto-fix lint / format
 
 ## Project layout
 
-| Path | Role |
-| --- | --- |
-| `app/[lang]/` | Locale-aware pages |
-| `components/chat/` | Chat compound UI |
-| `components/notif/` | Notification / lock-screen UI |
-| `components/studio/` | Studio shell, canvases, controls |
-| `components/i18n/` | Dictionary provider + locale select |
-| `lib/i18n/` | Locales, dictionaries, `getDictionary` |
-| `lib/presets.ts` | Loads users / chats / notifs from `public/presets/` |
-| `proxy.ts` | Locale detection & redirect |
+| Path                 | Role                                                |
+| -------------------- | --------------------------------------------------- |
+| `app/[lang]/`        | Locale-aware pages                                  |
+| `components/chat/`   | Chat compound UI                                    |
+| `components/notif/`  | Notification / lock-screen UI                       |
+| `components/studio/` | Studio shell, canvases, controls                    |
+| `components/i18n/`   | Dictionary provider + locale select                 |
+| `lib/i18n/`          | Locales, dictionaries, `getDictionary`              |
+| `lib/presets.ts`     | Loads users / chats / notifs from `public/presets/` |
+| `proxy.ts`           | Locale detection & redirect                         |
 
 ## Presets
 

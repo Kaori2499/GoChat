@@ -1,5 +1,10 @@
 {
   "id": "soyo",
-  "name": "そよ",
+  "names": {
+    "ch": "素世",
+    "ja": "そよ",
+    "en": "Soyo"
+  },
+  "aliases": {},
   "phoneCaseColor": "#c4b5fd"
 }

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   Select,
@@ -8,28 +8,29 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { locales, type Locale } from "@/lib/i18n/config"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/select";
+import { locales } from "@/lib/i18n/config";
+import type { Locale } from "@/lib/i18n/config";
+import { cn } from "@/lib/utils";
 
-import { useDictionary, useLocale } from "./dictionary-provider"
+import { useDictionary, useLocale } from "./dictionary-provider";
 
 export const LocaleSelect = ({ className }: { className?: string }) => {
-  const dict = useDictionary()
-  const locale = useLocale()
-  const pathname = usePathname()
-  const router = useRouter()
+  const dict = useDictionary();
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const switchLocale = (nextLocale: string) => {
     if (!locales.includes(nextLocale as Locale)) {
-      return
+      return;
     }
 
-    document.cookie = `NEXT_LOCALE=${nextLocale};path=/;max-age=31536000`
-    const segments = pathname.split("/")
-    segments[1] = nextLocale
-    router.push(segments.join("/") || `/${nextLocale}`)
-  }
+    document.cookie = `NEXT_LOCALE=${nextLocale};path=/;max-age=31536000`;
+    const segments = pathname.split("/");
+    segments[1] = nextLocale;
+    router.push(segments.join("/") || `/${nextLocale}`);
+  };
 
   return (
     <div data-slot="locale-select" className={cn(className)}>
@@ -37,7 +38,7 @@ export const LocaleSelect = ({ className }: { className?: string }) => {
         value={locale}
         onValueChange={(value) => {
           if (typeof value === "string") {
-            switchLocale(value)
+            switchLocale(value);
           }
         }}
       >
@@ -57,5 +58,5 @@ export const LocaleSelect = ({ className }: { className?: string }) => {
         </SelectContent>
       </Select>
     </div>
-  )
-}
+  );
+};

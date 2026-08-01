@@ -1,5 +1,10 @@
 {
   "id": "taki",
-  "name": "立希",
+  "names": {
+    "ch": "立希",
+    "ja": "立希",
+    "en": "Taki"
+  },
+  "aliases": {},
   "phoneCaseColor": "#6366f1"
 }

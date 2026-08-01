@@ -3,7 +3,10 @@
 import { useState } from "react";
 import type { RefObject } from "react";
 
-import { useDictionary } from "@/components/i18n/dictionary-provider";
+import {
+  useDictionary,
+  useLocale,
+} from "@/components/i18n/dictionary-provider";
 import { Notif } from "@/components/notif/notif";
 import {
   createEmptyNotification,
@@ -14,6 +17,7 @@ import type {
   NotifItemData,
   NotifPreset,
 } from "@/components/notif/notif.types";
+import { resolveUserName } from "@/lib/user-names";
 
 import { useSessionStore } from "../hooks/use-session-store";
 import { NONE_USER } from "../lib/studio.lib";
@@ -26,6 +30,7 @@ export const StudioNotifCanvas = ({
   exportRootRef?: RefObject<HTMLDivElement | null>;
 }) => {
   const dict = useDictionary();
+  const locale = useLocale();
   const activeUserId = useSessionStore((state) => state.activeUserId);
   const usersById = useSessionStore((state) => state.usersById);
   const [preset] = notifPresets;
@@ -39,9 +44,7 @@ export const StudioNotifCanvas = ({
 
   if (!preset) {
     return (
-      <p className="text-sm text-muted-foreground">
-        {dict.notif.noPresets}
-      </p>
+      <p className="text-sm text-muted-foreground">{dict.notif.noPresets}</p>
     );
   }
 
@@ -108,7 +111,9 @@ export const StudioNotifCanvas = ({
             item.id === notifId
               ? {
                   ...item,
-                  chatTitle: user?.name ?? item.chatTitle,
+                  chatTitle: user
+                    ? resolveUserName(user, locale)
+                    : item.chatTitle,
                   message: { ...item.message, userId },
                 }
               : item

@@ -1,5 +1,7 @@
 import type { RuntimeFeature } from "@/lib/runtime-kit/create-runtime-kit";
 
+import { DraftsPersistenceSetup } from "../hooks/use-drafts-persistence";
+import { loadChatDrafts } from "./chat-drafts-storage";
 import type { StudioKitEvents, StudioRuntimeStore } from "./studio-store.types";
 import { DRAFTS_FEATURE_KEY } from "./studio-store.types";
 import type { ChatDraft } from "./studio.lib";
@@ -32,6 +34,7 @@ export const draftsFeature = (): RuntimeFeature<
   StudioRuntimeStore,
   StudioKitEvents
 > => ({
+  Setup: DraftsPersistenceSetup,
   createSlice: (set, get) => ({
     drafts: {
       addMessage: (chatId) => {
@@ -49,7 +52,7 @@ export const draftsFeature = (): RuntimeFeature<
           );
         });
       },
-      byChatId: {},
+      byChatId: loadChatDrafts(),
       deleteMessage: (chatId, messageId) => {
         const preset = get().catalog.presets.find((p) => p.id === chatId);
         set((state) => {

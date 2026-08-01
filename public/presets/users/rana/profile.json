@@ -1,5 +1,10 @@
 {
   "id": "rana",
-  "name": "楽奈",
+  "names": {
+    "ch": "乐奈",
+    "ja": "楽奈",
+    "en": "Rana"
+  },
+  "aliases": {},
   "phoneCaseColor": "#fbbf24"
 }

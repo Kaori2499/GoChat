@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { Check, Circle, Map } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Check, Circle, Map } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import {
   useDictionary,
   useLocale,
-} from "@/components/i18n/dictionary-provider"
-import { buttonVariants } from "@/components/ui/button"
+} from "@/components/i18n/dictionary-provider";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,49 +15,46 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  formatRoadmapCreatedTime,
-  type Roadmap,
-  type RoadmapItem,
-} from "@/lib/roadmap"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/dropdown-menu";
+import { formatRoadmapCreatedTime } from "@/lib/roadmap";
+import type { Roadmap, RoadmapItem } from "@/lib/roadmap";
+import { cn } from "@/lib/utils";
 
 export const RoadmapButton = ({ className }: { className?: string }) => {
-  const dict = useDictionary()
-  const locale = useLocale()
-  const [items, setItems] = useState<RoadmapItem[]>([])
+  const dict = useDictionary();
+  const locale = useLocale();
+  const [items, setItems] = useState<RoadmapItem[]>([]);
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     const load = async () => {
       try {
-        const response = await fetch("/roadmap.json")
+        const response = await fetch("/roadmap.json");
         if (!response.ok) {
-          return
+          return;
         }
-        const data = (await response.json()) as Roadmap
+        const data = (await response.json()) as Roadmap;
         if (!cancelled) {
-          setItems(data.items ?? [])
+          setItems(data.items ?? []);
         }
       } catch {
         // Keep empty list if roadmap cannot be loaded.
       }
-    }
+    };
 
-    void load()
+    void load();
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
           buttonVariants({ size: "icon", variant: "outline" }),
-          className,
+          className
         )}
         aria-label={dict.roadmap.label}
       >
@@ -77,7 +74,7 @@ export const RoadmapButton = ({ className }: { className?: string }) => {
             </DropdownMenuItem>
           ) : (
             items.map((item) => {
-              const isCompleted = item.status === "completed"
+              const isCompleted = item.status === "completed";
               return (
                 <DropdownMenuItem
                   key={item.id}
@@ -87,9 +84,7 @@ export const RoadmapButton = ({ className }: { className?: string }) => {
                   <span
                     className={cn(
                       "mt-0.5 flex size-4 shrink-0 items-center justify-center",
-                      isCompleted
-                        ? "text-foreground"
-                        : "text-muted-foreground",
+                      isCompleted ? "text-foreground" : "text-muted-foreground"
                     )}
                     aria-hidden
                   >
@@ -103,7 +98,7 @@ export const RoadmapButton = ({ className }: { className?: string }) => {
                     <span
                       className={cn(
                         "text-sm leading-snug whitespace-normal",
-                        isCompleted && "text-muted-foreground line-through",
+                        isCompleted && "text-muted-foreground line-through"
                       )}
                     >
                       {item.title}
@@ -117,11 +112,11 @@ export const RoadmapButton = ({ className }: { className?: string }) => {
                     </span>
                   </span>
                 </DropdownMenuItem>
-              )
+              );
             })
           )}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useTheme } from "next-themes"
+import { useTheme } from "next-themes";
 
 import {
   IPHONE_HEIGHT,
   IPHONE_WIDTH,
   usePhonePreviewScale,
-} from "@/hooks/use-phone-preview-scale"
-import { cn } from "@/lib/utils"
+} from "@/hooks/use-phone-preview-scale";
+import { cn } from "@/lib/utils";
 
-import { resolveWallpaperUrl } from "./chat.helpers"
-import { ChatBody, ChatFooter } from "./chat.body"
-import { ChatHeader, ChatHeaderGroup } from "./chat.header"
-import { ChatInput } from "./chat.input"
-import { ChatMessages } from "./chat.messages"
-import { ChatShell } from "./chat.shell"
-import { getChatTheme } from "./chat.theme"
-import type { ChatPreviewProps, ChatThemeId } from "./chat.types"
+import { ChatBody, ChatFooter } from "./chat.body";
+import { ChatHeader, ChatHeaderGroup } from "./chat.header";
+import { resolveWallpaperUrl } from "./chat.helpers";
+import { ChatInput } from "./chat.input";
+import { ChatMessages } from "./chat.messages";
+import { ChatShell } from "./chat.shell";
+import { getChatTheme } from "./chat.theme";
+import type { ChatPreviewProps, ChatThemeId } from "./chat.types";
 
 const ChatPreview = ({
   title,
@@ -36,12 +36,12 @@ const ChatPreview = ({
   onAddMessage,
   className,
 }: ChatPreviewProps) => {
-  const { resolvedTheme } = useTheme()
+  const { resolvedTheme } = useTheme();
   const theme =
     themeProp ??
-    getChatTheme((resolvedTheme === "dark" ? "dark" : "light") as ChatThemeId)
-  const wallpaper = resolveWallpaperUrl(usersById, selfUserId, wallpaperUrl)
-  const { height, scale, width } = usePhonePreviewScale()
+    getChatTheme((resolvedTheme === "dark" ? "dark" : "light") as ChatThemeId);
+  const wallpaper = resolveWallpaperUrl(usersById, selfUserId, wallpaperUrl);
+  const { height, scale, width } = usePhonePreviewScale();
 
   return (
     <div
@@ -90,9 +90,9 @@ const ChatPreview = ({
         </ChatShell>
       </div>
     </div>
-  )
-}
+  );
+};
 
-ChatPreview.displayName = "Chat.Preview"
+ChatPreview.displayName = "Chat.Preview";
 
-export { ChatPreview }
+export { ChatPreview };

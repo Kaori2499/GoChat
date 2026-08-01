@@ -30,7 +30,8 @@
   },
   "presets": {
     "label": "预设",
-    "add": "添加空预设"
+    "add": "添加空预设",
+    "delete": "删除聊天"
   },
   "roadmap": {
     "label": "路线图",

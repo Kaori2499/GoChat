@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-import type { ChatBodyProps, ChatFooterProps } from "./chat.types"
+import type { ChatBodyProps, ChatFooterProps } from "./chat.types";
 
 const ChatBody = ({
   className,
@@ -9,8 +9,8 @@ const ChatBody = ({
   wallpaperOpacity: _wallpaperOpacity,
   ...props
 }: ChatBodyProps) => {
-  void _wallpaperUrl
-  void _wallpaperOpacity
+  void _wallpaperUrl;
+  void _wallpaperOpacity;
 
   return (
     <div
@@ -20,24 +20,22 @@ const ChatBody = ({
     >
       {children}
     </div>
-  )
-}
+  );
+};
 
-ChatBody.displayName = "Chat.Body"
+ChatBody.displayName = "Chat.Body";
 
-const ChatFooter = ({ className, children, ...props }: ChatFooterProps) => {
-  return (
-    <div
-      data-slot="chat-footer"
-      className={cn("relative z-20 shrink-0", className)}
-      style={{ backgroundColor: "var(--chat-input)" }}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-}
+const ChatFooter = ({ className, children, ...props }: ChatFooterProps) => (
+  <div
+    data-slot="chat-footer"
+    className={cn("relative z-20 shrink-0", className)}
+    style={{ backgroundColor: "var(--chat-input)" }}
+    {...props}
+  >
+    {children}
+  </div>
+);
 
-ChatFooter.displayName = "Chat.Footer"
+ChatFooter.displayName = "Chat.Footer";
 
-export { ChatBody, ChatFooter }
+export { ChatBody, ChatFooter };

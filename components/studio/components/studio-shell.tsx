@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 
-import { LocaleSelect } from "@/components/i18n/locale-select"
-import { RoadmapButton } from "@/components/roadmap-button"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { LocaleSelect } from "@/components/i18n/locale-select";
+import { RoadmapButton } from "@/components/roadmap-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const StudioShell = ({ children }: { children: ReactNode }) => (
   <div data-slot="studio" className="relative flex min-h-svh flex-col">
@@ -17,6 +17,6 @@ export const StudioShell = ({ children }: { children: ReactNode }) => (
     </div>
     {children}
   </div>
-)
+);
 
-StudioShell.displayName = "Studio"
+StudioShell.displayName = "Studio";
