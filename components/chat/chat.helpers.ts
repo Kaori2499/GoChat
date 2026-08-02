@@ -1,5 +1,9 @@
 import type { ChatMessage, ChatUser } from "./chat.types";
 
+/** Strip trailing newlines from contentEditable / paste (keeps mid-text breaks). */
+export const normalizeChatMessageContent = (value: string): string =>
+  value.replaceAll("\r\n", "\n").replaceAll(/\n+$/gu, "");
+
 export const getParticipantIds = (messages: ChatMessage[]): string[] => [
   ...new Set(messages.map((message) => message.userId)),
 ];

@@ -30,6 +30,9 @@ const ChatPreview = ({
   entranceDurationMs,
   onTitleChange,
   onMessageContentChange,
+  onMessageChooseText,
+  onMessageImageChange,
+  onMessageImageWidthChange,
   onMessageUserChange,
   onInsertMessage,
   onDeleteMessage,
@@ -81,6 +84,9 @@ const ChatPreview = ({
               entranceMessageId={entranceMessageId}
               entranceDurationMs={entranceDurationMs}
               onMessageContentChange={onMessageContentChange}
+              onMessageChooseText={onMessageChooseText}
+              onMessageImageChange={onMessageImageChange}
+              onMessageImageWidthChange={onMessageImageWidthChange}
               onMessageUserChange={onMessageUserChange}
               onInsertMessage={onInsertMessage}
               onDeleteMessage={onDeleteMessage}

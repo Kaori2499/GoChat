@@ -10,6 +10,7 @@ export const playbackFeature = (): RuntimeFeature<
 > => ({
   createSlice: (set, _get, _store, events) => ({
     playback: {
+      autoReveal: true,
       completePlayback: () => {
         set((state) => {
           state.playback.isPlaying = false;
@@ -23,6 +24,11 @@ export const playbackFeature = (): RuntimeFeature<
           state.playback.visibleCount += 1;
         });
       },
+      setAutoReveal: (autoReveal) => {
+        set((state) => {
+          state.playback.autoReveal = autoReveal;
+        });
+      },
       setGapMs: (gapMs) => {
         set((state) => {
           state.playback.gapMs = gapMs;
@@ -33,18 +39,20 @@ export const playbackFeature = (): RuntimeFeature<
           state.playback.timeScale = Math.min(1, Math.max(1 / 32, timeScale));
         });
       },
-      startPlayback: (messageCount) => {
+      startPlayback: (messageCount, options) => {
         if (messageCount <= 0) {
           return;
         }
         set((state) => {
           state.playback.isPlaying = true;
-          // First message appears immediately; gap only applies between later ones.
-          state.playback.visibleCount = 1;
+          // Normal play: first message immediate. Export can defer so the
+          // recorder is warm before the entrance animation starts.
+          state.playback.visibleCount = options?.deferFirst ? 0 : 1;
         });
       },
       stopPlayback: () => {
         set((state) => {
+          state.playback.autoReveal = true;
           state.playback.isPlaying = false;
           state.playback.timeScale = 1;
           state.playback.visibleCount = 0;

@@ -28,7 +28,8 @@
     "button": "Export PNG",
     "exporting": "Exporting…",
     "videoButton": "Export video",
-    "exportingVideo": "Rendering 60fps… (click to cancel)"
+    "exportingVideo": "Rendering… (click to cancel)",
+    "resolution": "Resolution"
   },
   "presets": {
     "label": "Presets",
@@ -70,6 +71,12 @@
     "editMessage": "Edit message",
     "insertAbove": "Insert message above",
     "insertBelow": "Insert message below",
+    "uploadImage": "Upload image",
+    "replaceImage": "Replace image",
+    "resizeImage": "Resize image",
+    "removeImage": "Remove image",
+    "typeText": "Text",
+    "typeImage": "Image",
     "delete": "Delete message"
   }
 }

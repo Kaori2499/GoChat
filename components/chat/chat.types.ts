@@ -2,10 +2,18 @@ import type { ComponentProps, RefObject } from "react";
 
 import type { LocalizedName } from "@/lib/user-names";
 
+export type ChatMessageKind = "text" | "image";
+
 export interface ChatMessage {
   id: string;
   userId: string;
   content: string;
+  /** Set after the user picks text or image for a new bubble. */
+  kind?: ChatMessageKind;
+  /** Present when `kind` is `"image"`. */
+  imageUrl?: string;
+  /** Display width in CSS px when `kind` is `"image"`. */
+  imageWidth?: number;
 }
 
 export interface ChatUser {
@@ -89,6 +97,9 @@ export type ChatFooterProps = ComponentProps<"div">;
 export interface ChatMessageStates {
   id: string;
   content: string;
+  kind?: ChatMessageKind;
+  imageUrl?: string;
+  imageWidth?: number;
   isOwn: boolean;
   isGroup: boolean;
   isConsecutiveFromSender?: boolean;
@@ -101,6 +112,9 @@ export interface ChatMessageStates {
 
 export interface ChatMessageActions {
   onContentChange?: (content: string) => void;
+  onChooseText?: () => void;
+  onImageChange?: (imageUrl?: string) => void;
+  onImageWidthChange?: (imageWidth: number) => void;
   onUserChange?: (userId: string) => void;
   onInsertAbove?: () => void;
   onInsertBelow?: () => void;
@@ -125,6 +139,9 @@ export interface ChatMessagesProps {
   /** Entrance animation length in ms (scaled during slow video export). */
   entranceDurationMs?: number;
   onMessageContentChange?: (messageId: string, content: string) => void;
+  onMessageChooseText?: (messageId: string) => void;
+  onMessageImageChange?: (messageId: string, imageUrl?: string) => void;
+  onMessageImageWidthChange?: (messageId: string, imageWidth: number) => void;
   onMessageUserChange?: (messageId: string, userId: string) => void;
   onInsertMessage?: (anchorId: string, position: "above" | "below") => void;
   onDeleteMessage?: (messageId: string) => void;
@@ -146,6 +163,9 @@ export interface ChatPreviewProps {
   exportRootRef?: RefObject<HTMLDivElement | null>;
   onTitleChange?: (title: string) => void;
   onMessageContentChange?: (messageId: string, content: string) => void;
+  onMessageChooseText?: (messageId: string) => void;
+  onMessageImageChange?: (messageId: string, imageUrl?: string) => void;
+  onMessageImageWidthChange?: (messageId: string, imageWidth: number) => void;
   onMessageUserChange?: (messageId: string, userId: string) => void;
   onInsertMessage?: (anchorId: string, position: "above" | "below") => void;
   onDeleteMessage?: (messageId: string) => void;

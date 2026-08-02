@@ -3,7 +3,7 @@ import { createId } from "@/lib/create-id";
 
 export const NONE_USER = "none";
 
-export const DEFAULT_GAP_MS = 600;
+export const DEFAULT_GAP_MS = 1500;
 export const MIN_GAP_MS = 200;
 export const MAX_GAP_MS = 2000;
 export const GAP_STEP_MS = 100;
@@ -14,6 +14,8 @@ export type StudioMode = "notif" | "chat";
 export interface ChatDraft {
   messages: ChatMessage[];
   title: string;
+  /** Remembered "me" / self user for this chat. */
+  activeUserId?: string;
 }
 
 export const createEmptyMessage = (): ChatMessage => ({

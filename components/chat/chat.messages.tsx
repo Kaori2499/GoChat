@@ -99,6 +99,9 @@ interface ChatMessageRowProps {
   setDragIndex: (index: number | null) => void;
   setInsertAt: (index: number | null) => void;
   onMessageContentChange?: (messageId: string, content: string) => void;
+  onMessageChooseText?: (messageId: string) => void;
+  onMessageImageChange?: (messageId: string, imageUrl?: string) => void;
+  onMessageImageWidthChange?: (messageId: string, imageWidth: number) => void;
   onMessageUserChange?: (messageId: string, userId: string) => void;
   onInsertMessage?: (anchorId: string, position: "above" | "below") => void;
   onDeleteMessage?: (messageId: string) => void;
@@ -126,6 +129,9 @@ const ChatMessageRow = ({
   setDragIndex,
   setInsertAt,
   onMessageContentChange,
+  onMessageChooseText,
+  onMessageImageChange,
+  onMessageImageWidthChange,
   onMessageUserChange,
   onInsertMessage,
   onDeleteMessage,
@@ -146,6 +152,7 @@ const ChatMessageRow = ({
 
   return (
     <div
+      data-entrance-message={isEntrance ? "" : undefined}
       ref={isEntrance ? entranceRef : undefined}
       className={cn(
         "relative",
@@ -172,6 +179,13 @@ const ChatMessageRow = ({
         )}
         onDragStart={(event) => {
           if (!editable) {
+            return;
+          }
+          if (
+            event.target instanceof Element &&
+            event.target.closest("[data-chat-image-resize]")
+          ) {
+            event.preventDefault();
             return;
           }
           setDragIndex(index);
@@ -222,21 +236,33 @@ const ChatMessageRow = ({
               content: message.content,
               hasPrecedingMessage: index > 0,
               id: message.id,
+              imageUrl: message.imageUrl,
+              imageWidth: message.imageWidth,
               isConsecutiveFromSender,
               isGroup: showNameSpacer || isUnassigned || editable,
               isOwn,
               isUnassigned,
+              kind: message.kind,
               senderAvatarUrl: sender?.avatarUrl,
               senderName: sender
                 ? resolveDisplayName(viewer, sender, locale)
                 : undefined,
             }}
             actions={{
+              onChooseText: () => {
+                onMessageChooseText?.(message.id);
+              },
               onContentChange: (content) => {
                 onMessageContentChange?.(message.id, content);
               },
               onDelete: () => {
                 onDeleteMessage?.(message.id);
+              },
+              onImageChange: (imageUrl) => {
+                onMessageImageChange?.(message.id, imageUrl);
+              },
+              onImageWidthChange: (nextWidth) => {
+                onMessageImageWidthChange?.(message.id, nextWidth);
               },
               onInsertAbove: () => {
                 onInsertMessage?.(message.id, "above");
@@ -269,6 +295,9 @@ const ChatMessages = ({
   entranceMessageId,
   entranceDurationMs = DEFAULT_ENTRANCE_MS,
   onMessageContentChange,
+  onMessageChooseText,
+  onMessageImageChange,
+  onMessageImageWidthChange,
   onMessageUserChange,
   onInsertMessage,
   onDeleteMessage,
@@ -306,7 +335,7 @@ const ChatMessages = ({
     <div
       data-slot="chat-messages"
       className={cn(
-        "conversation-scroll relative z-10 h-full min-h-0 overflow-y-auto overscroll-contain hide-scrollbar",
+        "conversation-scroll relative z-10 h-full min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain hide-scrollbar",
         className
       )}
     >
@@ -347,6 +376,9 @@ const ChatMessages = ({
             setDragIndex={setDragIndex}
             setInsertAt={setInsertAt}
             onMessageContentChange={onMessageContentChange}
+            onMessageChooseText={onMessageChooseText}
+            onMessageImageChange={onMessageImageChange}
+            onMessageImageWidthChange={onMessageImageWidthChange}
             onMessageUserChange={onMessageUserChange}
             onInsertMessage={onInsertMessage}
             onDeleteMessage={onDeleteMessage}

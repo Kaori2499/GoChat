@@ -1,25 +1,28 @@
-import { toPng } from "html-to-image";
+import { getFontEmbedCSS, toPng } from "html-to-image";
 
-import { IPHONE_HEIGHT, IPHONE_WIDTH } from "@/lib/phone-frame";
+import {
+  buildPhoneCaptureOptions,
+  lockChatBubbleLineBreaks,
+} from "@/lib/export-dom-capture";
 
 export const downloadElementPng = async (
   element: HTMLElement,
   filename: string
 ): Promise<void> => {
-  const dataUrl = await toPng(element, {
-    cacheBust: true,
-    height: IPHONE_HEIGHT,
-    pixelRatio: 2,
-    style: {
-      height: `${IPHONE_HEIGHT}px`,
-      transform: "none",
-      width: `${IPHONE_WIDTH}px`,
-    },
-    width: IPHONE_WIDTH,
-  });
+  await document.fonts.ready;
+  const fontEmbedCSS = await getFontEmbedCSS(element);
+  const restoreLineBreaks = lockChatBubbleLineBreaks(element);
+  try {
+    const dataUrl = await toPng(
+      element,
+      buildPhoneCaptureOptions(fontEmbedCSS, 2, { cacheBust: true })
+    );
 
-  const link = document.createElement("a");
-  link.download = filename;
-  link.href = dataUrl;
-  link.click();
+    const link = document.createElement("a");
+    link.download = filename;
+    link.href = dataUrl;
+    link.click();
+  } finally {
+    restoreLineBreaks();
+  }
 };

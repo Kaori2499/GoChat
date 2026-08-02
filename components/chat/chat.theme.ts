@@ -2,8 +2,7 @@ import type { CSSProperties } from "react";
 
 import type { ChatTheme, ChatThemeId } from "./chat.types";
 
-export const CHAT_FONT =
-  '-apple-system, "Hiragino Sans", "Yu Gothic", "Helvetica Neue", sans-serif';
+export const CHAT_FONT = '"Noto Sans SC Variable", "Noto Sans SC", sans-serif';
 
 export const CHAT_RADIUS = "1.125rem";
 

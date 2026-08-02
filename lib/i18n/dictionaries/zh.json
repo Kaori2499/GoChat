@@ -28,7 +28,8 @@
     "button": "导出 PNG",
     "exporting": "导出中…",
     "videoButton": "导出视频",
-    "exportingVideo": "正在渲染 60fps…（点击取消）"
+    "exportingVideo": "渲染中…（点击取消）",
+    "resolution": "分辨率"
   },
   "presets": {
     "label": "预设",
@@ -70,6 +71,12 @@
     "editMessage": "编辑消息",
     "insertAbove": "在上方插入消息",
     "insertBelow": "在下方插入消息",
+    "uploadImage": "上传图片",
+    "replaceImage": "更换图片",
+    "resizeImage": "调整图片大小",
+    "removeImage": "移除图片",
+    "typeText": "文字",
+    "typeImage": "图片",
     "delete": "删除消息"
   }
 }

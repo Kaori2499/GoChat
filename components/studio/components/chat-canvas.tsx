@@ -25,6 +25,13 @@ export const StudioChatCanvas = ({
   const byChatId = useDraftsStore((state) => state.byChatId);
   const setTitle = useDraftsStore((state) => state.setTitle);
   const setMessageContent = useDraftsStore((state) => state.setMessageContent);
+  const setMessageKindText = useDraftsStore(
+    (state) => state.setMessageKindText
+  );
+  const setMessageImage = useDraftsStore((state) => state.setMessageImage);
+  const setMessageImageWidth = useDraftsStore(
+    (state) => state.setMessageImageWidth
+  );
   const setMessageUser = useDraftsStore((state) => state.setMessageUser);
   const insertMessage = useDraftsStore((state) => state.insertMessage);
   const deleteMessage = useDraftsStore((state) => state.deleteMessage);
@@ -72,6 +79,15 @@ export const StudioChatCanvas = ({
       }}
       onMessageContentChange={(messageId, content) => {
         setMessageContent(preset.id, messageId, content);
+      }}
+      onMessageChooseText={(messageId) => {
+        setMessageKindText(preset.id, messageId);
+      }}
+      onMessageImageChange={(messageId, imageUrl) => {
+        setMessageImage(preset.id, messageId, imageUrl);
+      }}
+      onMessageImageWidthChange={(messageId, imageWidth) => {
+        setMessageImageWidth(preset.id, messageId, imageWidth);
       }}
       onMessageUserChange={(messageId, userId) => {
         setMessageUser(preset.id, messageId, userId);

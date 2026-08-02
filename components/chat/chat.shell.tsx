@@ -28,10 +28,11 @@ const ChatShell = ({
     {...props}
   >
     {wallpaperUrl ? (
+      // oxlint-disable-next-line next/no-img-element -- export capture needs plain img
       <img
         src={wallpaperUrl}
         alt=""
-        className="chat-layer h-full w-full object-cover"
+        className="chat-layer h-full w-full scale-105 object-cover blur-[2px]"
         style={{ opacity: wallpaperOpacity }}
         aria-hidden
       />

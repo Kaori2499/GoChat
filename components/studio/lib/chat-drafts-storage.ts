@@ -1,3 +1,4 @@
+import { normalizeChatMessageContent } from "@/components/chat/chat.helpers";
 import type { ChatMessage, ChatPreset } from "@/components/chat/chat.types";
 import type { ChatDraft } from "@/components/studio/lib/studio.lib";
 
@@ -21,10 +22,24 @@ const isChatMessage = (value: unknown): value is ChatMessage => {
     return false;
   }
   const message = value as ChatMessage;
+  const hasOptionalImage =
+    message.imageUrl === undefined || typeof message.imageUrl === "string";
+  const hasOptionalKind =
+    message.kind === undefined ||
+    message.kind === "text" ||
+    message.kind === "image";
+  const hasOptionalImageWidth =
+    message.imageWidth === undefined ||
+    (typeof message.imageWidth === "number" &&
+      Number.isFinite(message.imageWidth) &&
+      message.imageWidth > 0);
   return (
     typeof message.id === "string" &&
     typeof message.userId === "string" &&
-    typeof message.content === "string"
+    typeof message.content === "string" &&
+    hasOptionalImage &&
+    hasOptionalKind &&
+    hasOptionalImageWidth
   );
 };
 
@@ -33,10 +48,13 @@ const isChatDraft = (value: unknown): value is ChatDraft => {
     return false;
   }
   const draft = value as ChatDraft;
+  const hasOptionalActiveUser =
+    draft.activeUserId === undefined || typeof draft.activeUserId === "string";
   return (
     typeof draft.title === "string" &&
     Array.isArray(draft.messages) &&
-    draft.messages.every(isChatMessage)
+    draft.messages.every(isChatMessage) &&
+    hasOptionalActiveUser
   );
 };
 
@@ -54,23 +72,43 @@ const isChatPreset = (value: unknown): value is ChatPreset => {
   );
 };
 
-const sanitizeDraft = (draft: ChatDraft): ChatDraft => ({
-  messages: draft.messages.map((message) => ({
-    content: message.content,
+const sanitizeMessage = (message: ChatMessage): ChatMessage => {
+  const next: ChatMessage = {
+    content: normalizeChatMessageContent(message.content),
     id: message.id,
     userId: message.userId,
-  })),
-  title: draft.title,
-});
+  };
+  if (message.kind === "text" || message.kind === "image") {
+    next.kind = message.kind;
+  }
+  if (message.imageUrl) {
+    next.imageUrl = message.imageUrl;
+  }
+  if (
+    typeof message.imageWidth === "number" &&
+    Number.isFinite(message.imageWidth) &&
+    message.imageWidth > 0
+  ) {
+    next.imageWidth = message.imageWidth;
+  }
+  return next;
+};
+
+const sanitizeDraft = (draft: ChatDraft): ChatDraft => {
+  const next: ChatDraft = {
+    messages: draft.messages.map(sanitizeMessage),
+    title: draft.title,
+  };
+  if (typeof draft.activeUserId === "string" && draft.activeUserId) {
+    next.activeUserId = draft.activeUserId;
+  }
+  return next;
+};
 
 const sanitizePreset = (preset: ChatPreset): ChatPreset => ({
   fileName: preset.fileName,
   id: preset.id,
-  messages: preset.messages.map((message) => ({
-    content: message.content,
-    id: message.id,
-    userId: message.userId,
-  })),
+  messages: preset.messages.map(sanitizeMessage),
   title: preset.title,
 });
 

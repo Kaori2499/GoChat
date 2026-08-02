@@ -33,7 +33,19 @@ export interface DraftsStore {
     messageId: string,
     content: string
   ) => void;
+  setMessageKindText: (chatId: string, messageId: string) => void;
+  setMessageImage: (
+    chatId: string,
+    messageId: string,
+    imageUrl?: string
+  ) => void;
+  setMessageImageWidth: (
+    chatId: string,
+    messageId: string,
+    imageWidth: number
+  ) => void;
   setMessageUser: (chatId: string, messageId: string, userId: string) => void;
+  setChatActiveUser: (chatId: string, userId: string) => void;
   setTitle: (chatId: string, title: string) => void;
 }
 
@@ -41,16 +53,25 @@ export interface PlaybackStore {
   gapMs: number;
   isPlaying: boolean;
   /**
+   * When false, PlaybackSetup does not auto-advance reveals — export drives
+   * them lockstep with frame capture instead.
+   */
+  autoReveal: boolean;
+  /**
    * Content speed multiplier. `1` = realtime; values below 1 slow
-   * reveals/animations so video export can capture more unique frames.
+   * reveals/animations (used sparingly; export prefers lockstep instead).
    */
   timeScale: number;
   visibleCount: number;
   completePlayback: () => void;
   revealNext: () => void;
+  setAutoReveal: (autoReveal: boolean) => void;
   setGapMs: (gapMs: number) => void;
   setTimeScale: (timeScale: number) => void;
-  startPlayback: (messageCount: number) => void;
+  startPlayback: (
+    messageCount: number,
+    options?: { deferFirst?: boolean }
+  ) => void;
   stopPlayback: () => void;
 }
 

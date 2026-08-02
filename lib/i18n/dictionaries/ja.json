@@ -28,7 +28,8 @@
     "button": "PNG を書き出し",
     "exporting": "書き出し中…",
     "videoButton": "動画を書き出し",
-    "exportingVideo": "60fpsレンダリング中…（クリックで取消）"
+    "exportingVideo": "レンダリング中…（クリックで取消）",
+    "resolution": "解像度"
   },
   "presets": {
     "label": "プリセット",
@@ -70,6 +71,12 @@
     "editMessage": "メッセージを編集",
     "insertAbove": "上にメッセージを挿入",
     "insertBelow": "下にメッセージを挿入",
+    "uploadImage": "画像をアップロード",
+    "replaceImage": "画像を差し替え",
+    "resizeImage": "画像サイズを変更",
+    "removeImage": "画像を削除",
+    "typeText": "テキスト",
+    "typeImage": "画像",
     "delete": "メッセージを削除"
   }
 }
