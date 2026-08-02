@@ -11,6 +11,36 @@ export const getParticipantIds = (messages: ChatMessage[]): string[] => [
 export const isGroupChat = (messages: ChatMessage[]): boolean =>
   getParticipantIds(messages).length >= 2;
 
+const resolveChatMessagesScroller = (root: ParentNode): HTMLElement | null => {
+  if (!(root instanceof HTMLElement)) {
+    return root.querySelector<HTMLElement>("[data-slot='chat-messages']");
+  }
+  if (root.matches("[data-slot='chat-messages']")) {
+    return root;
+  }
+  return (
+    root.closest<HTMLElement>("[data-slot='chat-messages']") ??
+    root.querySelector<HTMLElement>("[data-slot='chat-messages']")
+  );
+};
+
+/**
+ * Pin the conversation list to the bottom. Prefer this over `scrollIntoView`:
+ * the studio phone uses CSS `scale()`, which makes `scrollIntoView` miss or
+ * scroll the wrong ancestor. Always uses instant scrolling — CSS
+ * `scroll-behavior: smooth` would leave export frames mid-animation.
+ */
+export const scrollChatMessagesToBottom = (root: ParentNode): void => {
+  const scroller = resolveChatMessagesScroller(root);
+  if (!scroller) {
+    return;
+  }
+  const previousBehavior = scroller.style.scrollBehavior;
+  scroller.style.scrollBehavior = "auto";
+  scroller.scrollTop = scroller.scrollHeight;
+  scroller.style.scrollBehavior = previousBehavior;
+};
+
 export const resolveWallpaperUrl = (
   usersById: Record<string, ChatUser>,
   selfUserId?: string,

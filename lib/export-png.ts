@@ -1,8 +1,10 @@
 import { getFontEmbedCSS, toPng } from "html-to-image";
 
+import { scrollChatMessagesToBottom } from "@/components/chat/chat.helpers";
 import {
   buildPhoneCaptureOptions,
   lockChatBubbleLineBreaks,
+  lockScrollOffsetsForCapture,
 } from "@/lib/export-dom-capture";
 
 export const downloadElementPng = async (
@@ -12,6 +14,8 @@ export const downloadElementPng = async (
   await document.fonts.ready;
   const fontEmbedCSS = await getFontEmbedCSS(element);
   const restoreLineBreaks = lockChatBubbleLineBreaks(element);
+  scrollChatMessagesToBottom(element);
+  const restoreScroll = lockScrollOffsetsForCapture(element);
   try {
     const dataUrl = await toPng(
       element,
@@ -23,6 +27,7 @@ export const downloadElementPng = async (
     link.href = dataUrl;
     link.click();
   } finally {
+    restoreScroll();
     restoreLineBreaks();
   }
 };

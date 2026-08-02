@@ -170,6 +170,55 @@ export const lockChatBubbleLineBreaks = (root: HTMLElement): (() => void) => {
   };
 };
 
+/**
+ * html-to-image clones DOM without copying scrollTop/scrollLeft, so overflow
+ * containers reset to the top in captured frames. Bake scroll into a content
+ * transform before capture, then restore.
+ */
+export const lockScrollOffsetsForCapture = (
+  root: HTMLElement
+): (() => void) => {
+  const restores: (() => void)[] = [];
+
+  const bake = (el: HTMLElement) => {
+    if (el.scrollTop === 0 && el.scrollLeft === 0) {
+      return;
+    }
+    const inner = el.firstElementChild;
+    if (!(inner instanceof HTMLElement)) {
+      return;
+    }
+    const { scrollLeft, scrollTop } = el;
+    const prevTransform = inner.style.transform;
+    const prevOverflow = el.style.overflow;
+    const prevBehavior = el.style.scrollBehavior;
+    // Instant — smooth scroll would animate scrollTop=0 and fight the bake.
+    el.style.scrollBehavior = "auto";
+    inner.style.transform = `translate(${-scrollLeft}px, ${-scrollTop}px)`;
+    el.style.overflow = "hidden";
+    el.scrollTop = 0;
+    el.scrollLeft = 0;
+    restores.push(() => {
+      inner.style.transform = prevTransform;
+      el.style.overflow = prevOverflow;
+      el.scrollTop = scrollTop;
+      el.scrollLeft = scrollLeft;
+      el.style.scrollBehavior = prevBehavior;
+    });
+  };
+
+  for (const el of root.querySelectorAll<HTMLElement>("*")) {
+    bake(el);
+  }
+  bake(root);
+
+  return () => {
+    for (const restore of restores) {
+      restore();
+    }
+  };
+};
+
 export const buildPhoneCaptureOptions = (
   fontEmbedCSS: string,
   pixelRatio: number,

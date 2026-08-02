@@ -5,6 +5,7 @@ import { Download, LoaderCircle } from "lucide-react";
 import { useRef, useState } from "react";
 import type { RefObject } from "react";
 
+import { scrollChatMessagesToBottom } from "@/components/chat/chat.helpers";
 import { useDictionary } from "@/components/i18n/dictionary-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,7 +56,8 @@ const prepareEntranceFrame = (
     return () => false;
   }
   row.dataset.exportEntrance = "";
-  row.scrollIntoView({ behavior: "auto", block: "nearest" });
+  // scrollIntoView is unreliable under the phone CSS scale(); set scrollTop.
+  scrollChatMessagesToBottom(root);
   row.style.animation = "none";
   return (progress: number) => {
     // Ease-out cubic approximates the existing Tailwind entrance easing.
@@ -157,6 +159,10 @@ export const StudioChatExport = ({
           return;
         }
         revealNext();
+        await waitAnimationFrame();
+        // Instant pin after layout — CSS smooth scroll was leaving export
+        // mid-animation (bubbles jitter up/back while capture fought scroll).
+        scrollChatMessagesToBottom(element);
         await waitAnimationFrame();
         const applyProgress = prepareEntranceFrame(element);
         // Render all 18 animation frames offline with exact 60fps timestamps.

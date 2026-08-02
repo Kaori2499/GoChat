@@ -13,7 +13,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { resolveDisplayName } from "@/lib/user-names";
 import { cn } from "@/lib/utils";
 
-import { isGroupChat } from "./chat.helpers";
+import { isGroupChat, scrollChatMessagesToBottom } from "./chat.helpers";
 import { ChatMessage } from "./chat.message";
 import type {
   ChatMessage as ChatMessageData,
@@ -324,11 +324,8 @@ const ChatMessages = ({
     if (!entranceMessageId || !entranceRef.current) {
       return;
     }
-    // Instant scroll while export is slowed — smooth scrolling isn't time-scaled.
-    entranceRef.current.scrollIntoView({
-      behavior: entranceDurationMs > DEFAULT_ENTRANCE_MS ? "auto" : "smooth",
-      block: "nearest",
-    });
+    // Manual scrollTop — scrollIntoView breaks under the phone CSS scale().
+    scrollChatMessagesToBottom(entranceRef.current);
   }, [entranceDurationMs, entranceMessageId]);
 
   return (

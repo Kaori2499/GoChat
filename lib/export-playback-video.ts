@@ -7,9 +7,11 @@ import {
   Output,
 } from "mediabunny";
 
+import { scrollChatMessagesToBottom } from "@/components/chat/chat.helpers";
 import {
   buildPhoneCaptureOptions,
   lockChatBubbleLineBreaks,
+  lockScrollOffsetsForCapture,
 } from "@/lib/export-dom-capture";
 import { IPHONE_HEIGHT, IPHONE_WIDTH } from "@/lib/phone-frame";
 
@@ -99,10 +101,15 @@ export const startElementVideoRecording = async (
     // Lock wraps from the live preview so html-to-image's font-size hack
     // cannot move the last character up and leave a blank second line.
     const restoreLineBreaks = lockChatBubbleLineBreaks(element);
+    // Line-lock can change bubble heights — re-pin before baking scroll.
+    scrollChatMessagesToBottom(element);
+    // html-to-image clones reset scrollTop — bake offsets into transforms.
+    const restoreScroll = lockScrollOffsetsForCapture(element);
     try {
       latestFrame = await toCanvas(element, captureOptions);
       drawLatestFrame();
     } finally {
+      restoreScroll();
       restoreLineBreaks();
     }
   };
