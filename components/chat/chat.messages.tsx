@@ -2,7 +2,7 @@
 
 /* oxlint-disable complexity -- message row drag/drop + entrance flags */
 import { Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { DragEvent, RefObject } from "react";
 
 import {
@@ -312,13 +312,48 @@ const ChatMessages = ({
   const viewer = selfUserId ? usersById[selfUserId] : undefined;
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [insertAt, setInsertAt] = useState<number | null>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const entranceRef = useRef<HTMLDivElement>(null);
+  const tailSnapshotRef = useRef<{ length: number; lastId?: string }>({
+    length: 0,
+  });
+  const skipTailScrollRef = useRef(true);
 
   const showInsertLine =
     insertAt !== null &&
     dragIndex !== null &&
     insertAt !== dragIndex &&
     insertAt !== dragIndex + 1;
+
+  useLayoutEffect(() => {
+    if (!editable) {
+      tailSnapshotRef.current = {
+        lastId: messages.at(-1)?.id,
+        length: messages.length,
+      };
+      return;
+    }
+
+    const lastId = messages.at(-1)?.id;
+    const prev = tailSnapshotRef.current;
+
+    if (skipTailScrollRef.current) {
+      skipTailScrollRef.current = false;
+      tailSnapshotRef.current = { lastId, length: messages.length };
+      return;
+    }
+
+    const appendedAtBottom =
+      messages.length > prev.length &&
+      lastId !== undefined &&
+      lastId !== prev.lastId;
+
+    tailSnapshotRef.current = { lastId, length: messages.length };
+
+    if (appendedAtBottom && scrollerRef.current) {
+      scrollChatMessagesToBottom(scrollerRef.current);
+    }
+  }, [editable, messages]);
 
   useEffect(() => {
     if (!entranceMessageId || !entranceRef.current) {
@@ -330,6 +365,7 @@ const ChatMessages = ({
 
   return (
     <div
+      ref={scrollerRef}
       data-slot="chat-messages"
       className={cn(
         "conversation-scroll relative z-10 h-full min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain hide-scrollbar",

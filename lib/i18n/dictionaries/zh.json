@@ -21,7 +21,9 @@
     "label": "播放",
     "play": "播放",
     "stop": "停止",
-    "timeGap": "间隔"
+    "firstMessageDelay": "首条消息延迟",
+    "timeGap": "间隔",
+    "completeDelay": "结束等待"
   },
   "export": {
     "label": "导出",

@@ -21,7 +21,9 @@
     "label": "再生",
     "play": "再生",
     "stop": "停止",
-    "timeGap": "間隔"
+    "firstMessageDelay": "最初のメッセージまで",
+    "timeGap": "間隔",
+    "completeDelay": "終了待機"
   },
   "export": {
     "label": "書き出し",

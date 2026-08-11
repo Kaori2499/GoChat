@@ -51,6 +51,8 @@ export interface DraftsStore {
 
 export interface PlaybackStore {
   gapMs: number;
+  firstMessageDelayMs: number;
+  completeDelayMs: number;
   isPlaying: boolean;
   /**
    * When false, PlaybackSetup does not auto-advance reveals — export drives
@@ -66,6 +68,8 @@ export interface PlaybackStore {
   completePlayback: () => void;
   revealNext: () => void;
   setAutoReveal: (autoReveal: boolean) => void;
+  setCompleteDelayMs: (completeDelayMs: number) => void;
+  setFirstMessageDelayMs: (firstMessageDelayMs: number) => void;
   setGapMs: (gapMs: number) => void;
   setTimeScale: (timeScale: number) => void;
   startPlayback: (

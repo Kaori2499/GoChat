@@ -3,11 +3,16 @@
 import { useEffect } from "react";
 
 import { useStudioStore } from "../lib/studio-kit";
-import { PLAYBACK_COMPLETE_DELAY_MS } from "../lib/studio.lib";
 
 /** Drives reveal ticks + auto-complete. Mounted under Studio.Provider. */
 export const PlaybackSetup = () => {
   const gapMs = useStudioStore((state) => state.playback.gapMs);
+  const firstMessageDelayMs = useStudioStore(
+    (state) => state.playback.firstMessageDelayMs
+  );
+  const completeDelayMs = useStudioStore(
+    (state) => state.playback.completeDelayMs
+  );
   const timeScale = useStudioStore((state) => state.playback.timeScale);
   const autoReveal = useStudioStore((state) => state.playback.autoReveal);
   const isPlaying = useStudioStore((state) => state.playback.isPlaying);
@@ -29,21 +34,24 @@ export const PlaybackSetup = () => {
   const isComplete = isPlaying && visibleCount >= messageCount;
 
   const scaledGapMs = gapMs / timeScale;
-  const scaledCompleteDelayMs = PLAYBACK_COMPLETE_DELAY_MS / timeScale;
+  const scaledFirstDelayMs = firstMessageDelayMs / timeScale;
+  const scaledCompleteDelayMs = completeDelayMs / timeScale;
 
   useEffect(() => {
     if (!isPlaying || !autoReveal || visibleCount >= messageCount) {
       return;
     }
+    const delayMs = visibleCount === 0 ? scaledFirstDelayMs : scaledGapMs;
     const timer = window.setTimeout(() => {
       revealNext();
-    }, scaledGapMs);
+    }, delayMs);
     return () => window.clearTimeout(timer);
   }, [
     autoReveal,
     isPlaying,
     messageCount,
     revealNext,
+    scaledFirstDelayMs,
     scaledGapMs,
     visibleCount,
   ]);

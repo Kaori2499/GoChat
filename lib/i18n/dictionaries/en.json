@@ -21,7 +21,9 @@
     "label": "Playback",
     "play": "Play",
     "stop": "Stop",
-    "timeGap": "Time gap"
+    "firstMessageDelay": "First message delay",
+    "timeGap": "Time gap",
+    "completeDelay": "End hold"
   },
   "export": {
     "label": "Export",

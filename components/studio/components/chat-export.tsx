@@ -34,7 +34,7 @@ import type {
 import { useCatalogStore } from "../hooks/use-catalog-store";
 import { useDraftsStore } from "../hooks/use-drafts-store";
 import { usePlaybackStore } from "../hooks/use-playback-store";
-import { PLAYBACK_COMPLETE_DELAY_MS, resolveDraft } from "../lib/studio.lib";
+import { resolveDraft } from "../lib/studio.lib";
 
 const waitMs = (ms: number) =>
   new Promise<void>((resolve) => {
@@ -96,6 +96,10 @@ export const StudioChatExport = ({
   const byChatId = useDraftsStore((state) => state.byChatId);
   const isPlaying = usePlaybackStore((state) => state.isPlaying);
   const gapMs = usePlaybackStore((state) => state.gapMs);
+  const firstMessageDelayMs = usePlaybackStore(
+    (state) => state.firstMessageDelayMs
+  );
+  const completeDelayMs = usePlaybackStore((state) => state.completeDelayMs);
   const startPlayback = usePlaybackStore((state) => state.startPlayback);
   const stopPlayback = usePlaybackStore((state) => state.stopPlayback);
   const revealNext = usePlaybackStore((state) => state.revealNext);
@@ -152,6 +156,13 @@ export const StudioChatExport = ({
       }
       recorderRef.current = recorder;
 
+      if (firstMessageDelayMs > 0) {
+        await recorder.recordFor(firstMessageDelayMs, { snapshot: false });
+        if (generation !== exportGenerationRef.current) {
+          return;
+        }
+      }
+
       const holdAfterEntrance = Math.max(0, gapMs - EXPORT_ENTRANCE_MS);
 
       for (let index = 0; index < messageCount; index += 1) {
@@ -174,9 +185,7 @@ export const StudioChatExport = ({
           return;
         }
         const holdMs =
-          index < messageCount - 1
-            ? holdAfterEntrance
-            : PLAYBACK_COMPLETE_DELAY_MS;
+          index < messageCount - 1 ? holdAfterEntrance : completeDelayMs;
         // Hold on the settled frame — no DOM snapshots, so UI stays smooth.
         await recorder.recordFor(holdMs, { snapshot: false });
       }

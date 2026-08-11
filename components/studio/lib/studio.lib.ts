@@ -7,7 +7,18 @@ export const DEFAULT_GAP_MS = 1500;
 export const MIN_GAP_MS = 200;
 export const MAX_GAP_MS = 2000;
 export const GAP_STEP_MS = 100;
-export const PLAYBACK_COMPLETE_DELAY_MS = 320;
+
+/** Wait before the first message appears in playback / export. */
+export const DEFAULT_FIRST_MESSAGE_DELAY_MS = 0;
+export const MIN_FIRST_MESSAGE_DELAY_MS = 0;
+export const MAX_FIRST_MESSAGE_DELAY_MS = 5000;
+
+/** Hold after the last message before playback ends or export finishes. */
+export const DEFAULT_COMPLETE_DELAY_MS = 2000;
+export const MIN_COMPLETE_DELAY_MS = 0;
+export const MAX_COMPLETE_DELAY_MS = 5000;
+
+export const DELAY_STEP_MS = 100;
 
 export type StudioMode = "notif" | "chat";
 
